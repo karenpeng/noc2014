@@ -3,7 +3,7 @@
   function setup() {
     createGraphics(1300, 660);
     //colorMode(HSB);
-    frameRate(40);
+    frameRate(80);
     background(255);
     //   for (var i = 0; i < 10; i++) {
     walkers.push(new Walker(width / 2, height / 2));
