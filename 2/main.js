@@ -19,7 +19,7 @@ function draw() {
 }
 
 $(window).keydown(function (event) {
-  if (event.which === 38) {
+  if (event.which === 38 && bird.loc.y > 0) {
     bird.fly = true;
     var fly = new PVector(0, -10);
     bird.addForce(fly);
@@ -30,12 +30,12 @@ $(window).keyup(function (event) {
   bird.fly = false;
 });
 
-function touchStarted() {
+$(window).on('tap', function (event) {
   bird.fly = true;
   var fly = new PVector(0, -10);
   bird.addForce(fly);
-}
+});
 
-function touchEnded() {
+$(window).off('tap', function (event) {
   bird.fly = false;
-}
+});
