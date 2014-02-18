@@ -2,9 +2,9 @@ function Bird() {
   this.loc = new PVector(width / 8, height / 2);
   this.vel = new PVector(0, 0);
   this.acc = new PVector(0, 0);
-  this.radius = 20;
+  this.radius = 30;
   this.up = false;
-  this.theta = 0;
+  this.gama = 0;
 }
 
 Bird.prototype.move = function () {
@@ -13,8 +13,8 @@ Bird.prototype.move = function () {
   this.acc.mult(0);
   this.loc.x = constrain(this.loc.x, 0, width);
   this.loc.y = constrain(this.loc.y, 0, height);
-  this.vel.x = constrain(this.vel.x, -8, 8);
-  this.vel.y = constrain(this.vel.y, -8, 8);
+  this.vel.x = constrain(this.vel.x, -10, 10);
+  this.vel.y = constrain(this.vel.y, -10, 19);
 };
 
 Bird.prototype.addForce = function (force) {
@@ -23,16 +23,11 @@ Bird.prototype.addForce = function (force) {
 };
 
 Bird.prototype.rotate = function () {
-  if (this.acc.y < 0) {
-    this.theta = map(this.acc.y, 0, 10, 0, PI / 3);
+  if (this.vel.y < 0) {
+    this.gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 3);
   } else {
-    this.theta = map(this.acc.y, -10, 0, PI * 5 / 3, 0);
+    this.gama = map(this.vel.y * this.vel.y, 0, 380, -PI / 10, PI / 2);
   }
-  /*
-  this.loc.x = this.loc.x * cos(theta);
-  this.loc.y = this.loc.y * sin(theta);
-  */
-  console.log(this.acc);
 };
 
 Bird.prototype.show = function () {
@@ -40,12 +35,16 @@ Bird.prototype.show = function () {
   noStroke();
   pushMatrix();
   translate(this.loc.x, this.loc.y);
-  rotate(this.theta);
-  triangle(this.loc.x - sqrt(3) / 2 * this.radius, this.loc.y - this.radius,
-    this.loc.x + sqrt(3) * this.radius, this.loc.y,
-    this.loc.x - sqrt(3) / 2 * this.radius, this.loc.y + this.radius);
+  rotate(this.gama);
+  triangle(0 - sqrt(3) / 2 * this.radius, 0 - this.radius,
+    0 + sqrt(3) * this.radius, 0,
+    0 - sqrt(3) / 2 * this.radius, 0 + this.radius);
 
-  fill(0, 200, 0);
+  stroke(0, 200, 0);
+  strokeWeight(5);
+  point(0, 0);
+  line(0, 0, this.loc.x, this.loc.y);
   //triangle(this.)
   popMatrix();
+  console.log(this.gama);
 };
