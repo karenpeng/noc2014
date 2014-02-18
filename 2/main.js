@@ -30,12 +30,14 @@ $(window).keyup(function (event) {
   bird.fly = false;
 });
 
-$(window).on('tap', function (event) {
+onPointerDown = function (evt) {
+  evt.preventDefault();
   bird.fly = true;
   var fly = new PVector(0, -10);
   bird.addForce(fly);
-});
+};
 
-$(window).off('tap', function (event) {
+onPointerUp = function (evt) {
+  evt.preventDefault();
   bird.fly = false;
-});
+};
