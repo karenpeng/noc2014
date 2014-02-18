@@ -8,10 +8,12 @@ function setup() {
 
 function draw() {
   background(0);
-  var gravity = new PVector(0, 0.4);
-  bird.addForce(gravity);
+  var gravity = new PVector(0, 0.5);
+  if (!bird.fly) {
+    bird.addForce(gravity);
+  }
+  bird.rotate();
   bird.move();
-  //bird.rotate();
   bird.show();
 
 }
@@ -19,7 +21,12 @@ function draw() {
 $(window).keydown(function (event) {
   if (event.which === 38) {
     console.log("mouse");
-    var fly = new PVector(0, -9);
+    bird.fly = true;
+    var fly = new PVector(0, -10);
     bird.addForce(fly);
   }
+});
+
+$(window).keyup(function (event) {
+  bird.fly = false;
 });
