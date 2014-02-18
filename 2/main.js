@@ -32,18 +32,22 @@ $(window).keyup(function (event) {
   bird.fly = false;
 });
 
-onPointerDown = function (evt) {
+var onPointerDown = function (evt) {
   evt.preventDefault();
   bird.fly = true;
   var fly = new PVector(0, -10);
   bird.addForce(fly);
 };
 
-onPointerUp = function (evt) {
+var onPointerUp = function (evt) {
   evt.preventDefault();
   bird.fly = false;
 };
 
-window.addEventListener("pointerdown", onPointerDown, false);
-window.addEventListener("pointerup", onPointerUp, false);
+var onload = function () {
+  window.addEventListener("pointerdown", onPointerDown, false);
+  window.addEventListener("pointerup", onPointerUp, false);
+};
+
+document.addEventListener("DOMContentLoaded", onload, false);
 //});
