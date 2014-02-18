@@ -46,5 +46,5 @@ Bird.prototype.show = function () {
   line(0, 0, this.loc.x, this.loc.y);
   //triangle(this.)
   popMatrix();
-  console.log(this.gama);
+  //console.log(this.gama);
 };

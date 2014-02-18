@@ -1,3 +1,5 @@
+//$(document).ready(function () {
+
 var bird;
 
 function setup() {
@@ -19,7 +21,7 @@ function draw() {
 }
 
 $(window).keydown(function (event) {
-  if (event.which === 38 && bird.loc.y > 0) {
+  if (event.which === 38 /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
     var fly = new PVector(0, -10);
     bird.addForce(fly);
@@ -41,3 +43,7 @@ onPointerUp = function (evt) {
   evt.preventDefault();
   bird.fly = false;
 };
+
+window.addEventListener("pointerdown", onPointerDown, false);
+window.addEventListener("pointerup", onPointerUp, false);
+//});
