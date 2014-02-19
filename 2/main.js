@@ -38,12 +38,18 @@ function draw() {
     bird.check(tubes[i]);
     tubes[i].view();
   }
+
+  stroke(255);
+  strokeWeight(2);
+  fill(255);
+  textSize(30);
+  text(bird.counter, 20, 40);
 }
 
 $(window).keydown(function (event) {
   if (event.which === 38 && !bird.hitGroung && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
-    var fly = new PVector(0, -10.5);
+    var fly = new PVector(0, -11);
     bird.addForce(fly);
   }
 });

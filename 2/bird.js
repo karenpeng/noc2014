@@ -1,5 +1,5 @@
 function Bird() {
-  this.loc = new PVector(width / 8, height / 2);
+  this.loc = new PVector(width / 8, height / 4);
   this.vel = new PVector(0, 0);
   this.acc = new PVector(0, 0);
   this.radius1 = 30;
@@ -49,7 +49,7 @@ Bird.prototype.rotate = function () {
   if (this.vel.y < 0) {
     gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 4);
   } else {
-    gama = map(this.vel.y * this.vel.y, 0, 400, -PI / 10, PI / 2);
+    gama = map(this.vel.y * this.vel.y, 0, 360, -PI / 10, PI / 2);
   }
 };
 
@@ -99,7 +99,7 @@ Bird.prototype.check = function (t) {
 
 function Tube() {
   this.w = 60;
-  this.h = random(100, 400);
+  this.h = round(random(100, 360));
   this.gap = 200;
   this.loc = new PVector(width + this.w, 0);
   this.vel = new PVector(-10, 0);
