@@ -4,7 +4,7 @@ function Bird() {
   this.acc = new PVector(0, 0);
   this.radius1 = 30;
   this.radius2 = 25;
-  this.up = false;
+  this.fly = false;
   var gama = 0;
   var theta = 0;
   this.omega = 0;
@@ -19,25 +19,15 @@ Bird.prototype.move = function () {
     this.vel.add(this.acc);
     this.acc.mult(0);
   }
-  this.loc.x = constrain(this.loc.x, 0, width);
-  this.loc.y = constrain(this.loc.y, 0, height);
-  this.vel.x = constrain(this.vel.x, -10, 10);
-  this.vel.y = constrain(this.vel.y, -10, 19);
-  //if (!this.hitGround) {
-  if (this.vel.y < 0) {
-    this.omega++;
-  } else {
-    this.omega += 0.3;
-  }
-  //}
-  if (this.loc.y >= height) {
-    this.hitGround = true;
-  }
   if (this.hitTube) {
     this.loc.y += this.vel.y;
     this.vel.y += this.acc.y;
     this.acc.mult(0);
   }
+  this.loc.x = constrain(this.loc.x, 0, width);
+  this.loc.y = constrain(this.loc.y, 0, height);
+  this.vel.x = constrain(this.vel.x, -10, 10);
+  this.vel.y = constrain(this.vel.y, -10, 19);
 };
 
 Bird.prototype.addForce = function (force) {
@@ -46,16 +36,23 @@ Bird.prototype.addForce = function (force) {
 };
 
 Bird.prototype.rotate = function () {
+  if (!this.hitGround) {
+    if (this.vel.y < 0) {
+      this.omega++;
+    } else {
+      this.omega += 0.3;
+    }
+  } else {
+    this.omega += 0.05;
+  }
   if (this.vel.y < 0) {
     gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 4);
   } else {
-    gama = map(this.vel.y * this.vel.y, 0, 360, -PI / 10, PI / 2);
+    gama = map(this.vel.y * this.vel.y, 0, 440, -PI / 10, PI / 2);
   }
 };
 
 Bird.prototype.show = function () {
-  fill(255);
-  noStroke();
   pushMatrix();
   translate(this.loc.x, this.loc.y);
   rotate(gama);
@@ -87,6 +84,9 @@ Bird.prototype.show = function () {
 };
 
 Bird.prototype.check = function (t) {
+  if (this.loc.y >= height) {
+    this.hitGround = true;
+  }
   if (!t.pass && t.loc.x - (this.loc.x + sqrt(3) * this.radius1) <= 0) {
     if (this.loc.y <= t.h || this.loc.y >= t.h + t.gap) {
       console.log(this.vel.y);
@@ -98,7 +98,7 @@ Bird.prototype.check = function (t) {
 };
 
 function Tube() {
-  this.w = 60;
+  this.w = 66;
   this.h = round(random(100, 360));
   this.gap = 200;
   this.loc = new PVector(width + this.w, 0);
