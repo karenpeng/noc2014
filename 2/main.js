@@ -1,6 +1,7 @@
 //$(document).ready(function () {
 
 var bird;
+var tubes = [];
 
 function setup() {
   createGraphics(1000, 600);
@@ -18,12 +19,31 @@ function draw() {
   bird.move();
   bird.show();
 
+  if (frameCount % 30 === 0 && !bird.hitGround) {
+    tubes.push(new Tube());
+  }
+  /*
+  tubes.forEach(function(item){
+    item.update();
+    item.view();
+  });
+*/
+  for (var i = 0; i < tubes.length; i++) {
+    if (tubes[i].loc.x < -tubes[i].w) {
+      tubes.splice(i, 1);
+    }
+    if (!bird.hitGround && !bird.hitTube) {
+      tubes[i].update();
+    }
+    bird.check(tubes[i]);
+    tubes[i].view();
+  }
 }
 
 $(window).keydown(function (event) {
-  if (event.which === 38 /*&& bird.loc.y < height*/ ) {
+  if (event.which === 38 && !bird.hitGroung && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
-    var fly = new PVector(0, -10);
+    var fly = new PVector(0, -10.5);
     bird.addForce(fly);
   }
 });
