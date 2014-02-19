@@ -49,7 +49,7 @@ function draw() {
   strokeWeight(2);
   fill(255);
   textSize(30);
-  text(bird.counter, 20, 40);
+  text(bird.countScore, 20, 40);
 }
 
 $(window).keydown(function (event) {

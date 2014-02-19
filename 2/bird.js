@@ -10,7 +10,7 @@ function Bird() {
   this.omega = 0;
   this.hitGround = false;
   this.hitTube = false;
-  this.counter = 0;
+  this.countScore = 0;
 }
 
 Bird.prototype.move = function () {
@@ -87,13 +87,33 @@ Bird.prototype.check = function (t) {
   if (this.loc.y >= height) {
     this.hitGround = true;
   }
-  if (!t.pass && t.loc.x - (this.loc.x + sqrt(3) * this.radius1) <= 0) {
+  if (this.loc.x + sqrt(3) * this.radius1 >= t.loc.x && this.loc.x + sqrt(3) *
+    this.radius1 <= t.loc.x + t.w) {
     if (this.loc.y <= t.h || this.loc.y >= t.h + t.gap) {
-      console.log(this.vel.y);
       this.hitTube = true;
     }
+    // t.pass = true;
+    // this.score++;
+  }
+
+  if (this.loc.x - sqrt(3) / 2 * this.radius1 >= t.loc.x && this.loc.x - sqrt(3) /
+    2 * this.radius1 <= t.loc.x + t.w) {
+    if (this.loc.y + this.radius1 >= t.h + t.gap) {
+      this.hitTube = true;
+    }
+  }
+
+  if (this.loc.x - sqrt(3) / 2 * this.radius1 >= t.loc.x && this.loc.x - sqrt(3) /
+    2 * this.radius1 <= t.loc.x + t.w) {
+    if (this.loc.y - this.radius1 <= t.h) {
+      this.hitTube = true;
+    }
+  }
+
+  if (!this.hitTube && !t.pass && this.loc.x - sqrt(3) / 2 * this.radius1 > t.loc
+    .x + t.w) {
     t.pass = true;
-    this.counter++;
+    this.countScore++;
   }
 };
 
