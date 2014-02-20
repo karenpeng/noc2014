@@ -111,10 +111,11 @@ function draw() {
 }
 
 $(window).keydown(function (event) {
-  if (event.which === 38 && !bird.hitGroung && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+  if (event.which === 38 && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
     var fly = new PVector(0, -12);
     bird.addForce(fly);
+    wing.pause();
     wing.play();
   }
 });
@@ -125,15 +126,17 @@ $(window).keyup(function (event) {
 });
 
 $(window).mousedown(function () {
-  console.log("yeah");
+  if (!bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+    bird.fly = true;
+    var fly = new PVector(0, -12);
+    bird.addForce(fly);
+    wing.pause();
+    wing.play();
+  }
 });
 
-$(window).mousedown(function () {
-  console.log("yeah");
-});
-
-$(window).mousedown(function () {
-  console.log("yeah");
+$(window).mouseup(function () {
+  bird.fly = false;
 });
 
 /*

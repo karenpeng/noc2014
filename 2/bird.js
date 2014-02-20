@@ -1,6 +1,4 @@
 var point = document.getElementById("point");
-var hit = document.getElementById("hit");
-var die = document.getElementById("die");
 
 function Bird() {
   this.loc = new PVector(width / 8, height / 4);
@@ -118,6 +116,7 @@ Bird.prototype.check = function (t) {
     this.countScore++;
     var point = document.getElementById("point");
     point.play();
+    console.log("l");
   }
 };
 
