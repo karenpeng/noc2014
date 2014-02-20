@@ -1,3 +1,7 @@
+var point = document.getElementById("point");
+var hit = document.getElementById("hit");
+var die = document.getElementById("die");
+
 function Bird() {
   this.loc = new PVector(width / 8, height / 4);
   this.vel = new PVector(0, 0);
@@ -5,8 +9,6 @@ function Bird() {
   this.radius1 = 30;
   this.radius2 = 25;
   this.fly = false;
-  var gama = 0;
-  var theta = 0;
   this.omega = 0;
   this.hitGround = false;
   this.hitTube = false;
@@ -24,8 +26,8 @@ Bird.prototype.move = function () {
     this.vel.y += this.acc.y;
     this.acc.mult(0);
   }
-  this.loc.x = constrain(this.loc.x, 0, width);
-  this.loc.y = constrain(this.loc.y, 0, height);
+  this.loc.x = constrain(this.loc.x, this.radius1, width - this.radius1);
+  this.loc.y = constrain(this.loc.y, this.radius1, height - this.radius1);
   this.vel.x = constrain(this.vel.x, -10, 10);
   this.vel.y = constrain(this.vel.y, -10, 19);
 };
@@ -43,7 +45,7 @@ Bird.prototype.rotate = function () {
       this.omega += 0.3;
     }
   } else {
-    this.omega += 0.05;
+    this.omega += 0.06;
   }
   if (this.vel.y < 0) {
     gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 4);
@@ -84,7 +86,7 @@ Bird.prototype.show = function () {
 };
 
 Bird.prototype.check = function (t) {
-  if (this.loc.y >= height) {
+  if (this.loc.y >= height - this.radius1) {
     this.hitGround = true;
   }
   if (this.loc.x + sqrt(3) * this.radius1 >= t.loc.x && this.loc.x + sqrt(3) *
@@ -114,20 +116,29 @@ Bird.prototype.check = function (t) {
     .x + t.w) {
     t.pass = true;
     this.countScore++;
+    var point = document.getElementById("point");
+    point.play();
   }
 };
 
 function Tube() {
   this.w = 66;
   this.h = round(random(100, 360));
-  this.gap = 200;
+  this.gap = 220;
   this.loc = new PVector(width + this.w, 0);
   this.vel = new PVector(-10, 0);
   this.pass = false;
+  this.sick = false;
+  this.theta = 0;
 }
 
 Tube.prototype.update = function () {
-  this.loc.add(this.vel);
+  if (!this.sick) {
+    this.loc.add(this.vel);
+  } else {
+    this.h += sin(theta) * 30;
+    this.theta += 0.5;
+  }
 };
 
 Tube.prototype.view = function () {
