@@ -15,13 +15,15 @@ var die = document.getElementById("die");
 function setup() {
   createGraphics(1000, 600);
   smooth();
-  wat = 0;
+  wat = 0.0001;
   bird = new Bird();
   gravity = new PVector(0, 1);
-  snowFriction = new PVector(0, -0.7);
+  snowFriction = new PVector(0, -0.9);
+  /*
   for (var m = 0; m < 360; m++) {
     snows.push(new Snow());
   }
+  */
 }
 
 function draw() {
@@ -62,10 +64,13 @@ function draw() {
     item.view();
   });
 */
+  snows.push(new Snow());
   for (var n = 0; n < snows.length; n++) {
-    if (snows[n].loc.y >= height || snows[n].loc.x <= -2) {
-      //snows.splice(n, 1);
-      snows[n].reset();
+    if (snows[n].loc.y >= height || snows[n].loc.x <= -2 || snows[n].loc.x >
+      width + 200
+    ) {
+      snows.splice(n, 1);
+      //snows[n].reset();
     }
     snows[n].renew();
     snows[n].addF(gravity);
@@ -85,9 +90,6 @@ function draw() {
   }
 
   for (var i = 0; i < winds.length; i++) {
-    if (winds[i].loc.x < -winds[i].radius) {
-      winds.splice(i, 1);
-    }
     if (!bird.hitGround && !bird.hitTube) {
       winds[i].move();
     }
@@ -97,10 +99,16 @@ function draw() {
     });
 
     bird.addForce(winds[i].blow());
+
     winds[i].view();
-    if (bird.countScore >= 30) {
+    if (bird.countScore >= 40) {
       winds[i].change = true;
     }
+
+    if (winds[i].loc.x < -winds[i].radius) {
+      winds.splice(i, 1);
+    }
+
   }
 
   stroke(255);

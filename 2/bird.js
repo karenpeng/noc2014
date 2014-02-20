@@ -121,13 +121,13 @@ Bird.prototype.check = function (t) {
 };
 
 function Tube() {
+  this.sick = false;
   this.w = 66;
-  this.h = round(random(100, 360));
-  this.gap = 220;
+  this.h = round(random(60, 320));
+  this.gap = 260;
   this.loc = new PVector(width + this.w, 0);
   this.vel = new PVector(-10, 0);
   this.pass = false;
-  this.sick = false;
   this.theta = 0;
 }
 

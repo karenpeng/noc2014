@@ -43,8 +43,8 @@ Wind.prototype.view = function () {
 
 function Snow() {
   this.radius = 2;
-  this.loc = new PVector(random(0, width + 1000), random(-2, -2000));
-  this.vel = new PVector(-5, 0);
+  this.loc = new PVector(random(0, width + 200), -2);
+  this.vel = new PVector(-6, 0.1);
   this.acc = new PVector(0, 0);
 }
 
@@ -53,13 +53,13 @@ Snow.prototype.renew = function () {
   this.vel.add(this.acc);
   this.acc.mult(0);
 };
-
+/*
 Snow.prototype.reset = function () {
-  this.loc = new PVector(random(300, width + 2000), random(-2, -1000));
-  this.vel = new PVector(-10, 0);
+  this.loc = new PVector(random(width - 1000, width + 4000), random(-2, -200));
+  this.vel = new PVector(-6, 0);
   this.acc = new PVector(0, 0);
-}
-
+};
+*/
 Snow.prototype.addF = function (force) {
   var f = new PVector(force.x, force.y);
   this.acc.add(f);
