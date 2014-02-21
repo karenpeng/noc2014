@@ -26,6 +26,10 @@ $(".button").click(function () {
   init = true;
 });
 
+$(".button").hover(function () {
+  $(this).css("cursor", "pointer");
+});
+
 function setup() {
   createGraphics(1200, 700);
   smooth();
@@ -41,7 +45,6 @@ function draw() {
   if (lost && ok < 1) {
     $(".button").html("Try Again");
     $(".button").show();
-    console.log("yak");
     ok++;
   }
 

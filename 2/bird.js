@@ -30,7 +30,7 @@ Bird.prototype.move = function () {
     this.loc.y += sin(this.theta) * 3;
     this.theta += 0.3;
   };
-  this.loc.x = constrain(this.loc.x, this.radius1, width - this.radius1 * 2);
+  this.loc.x = constrain(this.loc.x, this.radius1, width - 150);
   this.loc.y = constrain(this.loc.y, this.radius1, height - this.radius1);
   this.vel.x = constrain(this.vel.x, -10, 10);
   this.vel.y = constrain(this.vel.y, -10, 19);
