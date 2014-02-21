@@ -29,7 +29,7 @@ Bird.prototype.move = function () {
   } else {
     this.loc.y += sin(this.theta) * 3;
     this.theta += 0.3;
-  };
+  }
   this.loc.x = constrain(this.loc.x, this.radius1, width - 150);
   this.loc.y = constrain(this.loc.y, this.radius1, height - this.radius1);
   this.vel.x = constrain(this.vel.x, -10, 10);
@@ -54,7 +54,7 @@ Bird.prototype.rotate = function () {
   if (this.vel.y < 0) {
     gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 4);
   } else {
-    gama = map(this.vel.y * this.vel.y, 0, 440, -PI / 10, PI / 2);
+    gama = map(this.vel.y * this.vel.y, 0, 480, -PI / 10, PI / 2);
   }
 };
 

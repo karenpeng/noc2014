@@ -26,15 +26,17 @@ Wind.prototype.move = function () {
 Wind.prototype.blow = function () {
   var copy = this.tar.get();
   var f = copy.sub(this.loc);
-  var UnitF = f.normalize();
-  var strength = map(f.mag(), 0, width, 0.1, 0);
-  strength = constrain(strength, 0, 0.1);
-  return UnitF.mult(strength);
+  //var length = f.mag();
+  //var UnitF = f.normalize();
+  var strength = map(f.mag(), 0, width, 0.001, 0);
+  strength = constrain(strength, 0, 0.001);
+  //return UnitF.mult(length).mult(strength);
+  return f.mult(strength);
 };
 
 Wind.prototype.view = function () {
   noFill();
-  stroke(250, 250, 10);
+  stroke(250, 200);
   ellipse(this.loc.x, this.loc.y, this.radius * 2, this.radius * 2);
   line(this.loc.x, this.loc.y, this.tar.x, this.tar.y);
   /*

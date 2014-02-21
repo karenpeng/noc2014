@@ -36,8 +36,8 @@ function setup() {
   wat = 0;
   counter = 0;
   bird = new Bird();
-  gravity = new PVector(0, 1);
-  snowFriction = new PVector(0, -0.9);
+  gravity = new PVector(0, 1.5);
+  snowFriction = new PVector(0, -1.1);
   ok = 0;
 }
 
@@ -148,12 +148,20 @@ function draw() {
 }
 
 $(window).keydown(function (event) {
-  if (init && event.which === 38 && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
-    bird.fly = true;
-    var fly = new PVector(0, -12);
-    bird.addForce(fly);
-    wing.pause();
-    wing.play();
+  if (init && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+    if (event.which === 38) {
+      bird.fly = true;
+      var fly = new PVector(0, -18);
+      bird.addForce(fly);
+      wing.pause();
+      wing.play();
+    }
+    if (event.which === 37) {
+      bird.loc.x -= 10;
+    }
+    if (event.which === 39) {
+      bird.loc.x += 10;
+    }
   }
 });
 
@@ -165,7 +173,7 @@ $(window).keyup(function (event) {
 $(window).mousedown(function () {
   if (init && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
-    var fly = new PVector(0, -12);
+    var fly = new PVector(0, -18);
     bird.addForce(fly);
     wing.pause();
     wing.play();
