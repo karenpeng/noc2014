@@ -54,7 +54,7 @@ Bird.prototype.rotate = function () {
   if (this.vel.y < 0) {
     gama = map(this.vel.y, 0, -8, -PI / 10, -PI / 4);
   } else {
-    gama = map(this.vel.y * this.vel.y, 0, 480, -PI / 10, PI / 2);
+    gama = map(this.vel.y * this.vel.y, 0, 500, -PI / 10, PI / 2);
   }
 };
 
