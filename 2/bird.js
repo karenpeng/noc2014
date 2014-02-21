@@ -1,30 +1,36 @@
 var point = document.getElementById("point");
 
 function Bird() {
-  this.loc = new PVector(width / 8, height / 4);
+  this.loc = new PVector(width / 8, height / 8);
   this.vel = new PVector(0, 0);
   this.acc = new PVector(0, 0);
   this.radius1 = 30;
   this.radius2 = 25;
-  this.fly = false;
+  this.fly = true;
   this.omega = 0;
+  this.theta = 0;
   this.hitGround = false;
   this.hitTube = false;
   this.countScore = 0;
 }
 
 Bird.prototype.move = function () {
-  if (!this.hitGround && !this.hitTube) {
-    this.loc.add(this.vel);
-    this.vel.add(this.acc);
-    this.acc.mult(0);
-  }
-  if (this.hitTube) {
-    this.loc.y += this.vel.y;
-    this.vel.y += this.acc.y;
-    this.acc.mult(0);
-  }
-  this.loc.x = constrain(this.loc.x, this.radius1, width - this.radius1);
+  if (init) {
+    if (!this.hitGround && !this.hitTube) {
+      this.loc.add(this.vel);
+      this.vel.add(this.acc);
+      this.acc.mult(0);
+    }
+    if (this.hitTube) {
+      this.loc.y += this.vel.y;
+      this.vel.y += this.acc.y;
+      this.acc.mult(0);
+    }
+  } else {
+    this.loc.y += sin(this.theta) * 3;
+    this.theta += 0.3;
+  };
+  this.loc.x = constrain(this.loc.x, this.radius1, width - this.radius1 * 2);
   this.loc.y = constrain(this.loc.y, this.radius1, height - this.radius1);
   this.vel.x = constrain(this.vel.x, -10, 10);
   this.vel.y = constrain(this.vel.y, -10, 19);
@@ -123,7 +129,7 @@ Bird.prototype.check = function (t) {
 function Tube() {
   this.sick = false;
   this.w = 66;
-  this.h = round(random(60, 320));
+  this.h = round(random(100, 340));
   this.gap = 260;
   this.loc = new PVector(width + this.w, 0);
   this.vel = new PVector(-10, 0);

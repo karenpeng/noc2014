@@ -11,26 +11,47 @@ var wat;
 var wing = document.getElementById("wing");
 var hit = document.getElementById("hit");
 var die = document.getElementById("die");
+var wind = document.getElementById("wind");
+var init = false;
+var lost = false;
+var counter;
+var ok;
+
+if (!init) {
+  $(".button").html("Play!");
+}
+
+$(".button").click(function () {
+  $(this).hide();
+  init = true;
+});
 
 function setup() {
-  createGraphics(1000, 600);
+  createGraphics(1200, 700);
   smooth();
-  wat = 0.0001;
+  wat = 0;
+  counter = 0;
   bird = new Bird();
   gravity = new PVector(0, 1);
   snowFriction = new PVector(0, -0.9);
-  /*
-  for (var m = 0; m < 360; m++) {
-    snows.push(new Snow());
-  }
-  */
+  ok = 0;
 }
 
 function draw() {
+  if (lost && ok < 1) {
+    $(".button").html("Try Again");
+    $(".button").show();
+    console.log("yak");
+    ok++;
+  }
+
   background(0);
-  wat += 0.00001;
-  if (wat >= 1) {
-    wat--;
+  if (init) {
+    wat += 0.00001;
+    if (wat >= 1) {
+      wat--;
+    }
+    counter++;
   }
   if (bird.hitTube && hitCount < 2) {
     fill(255, 150);
@@ -41,6 +62,7 @@ function draw() {
   if (bird.hitGround && dieCount < 2) {
     die.play();
     dieCount++;
+    lost = true;
   }
 
   if (!bird.fly) {
@@ -51,11 +73,12 @@ function draw() {
   bird.show();
 
   if (!bird.hitGround && !bird.hitTube) {
-    if (frameCount % 30 === 0) {
+    if (counter !== 0 && counter % 30 === 0) {
       tubes.push(new Tube());
     }
     if (Math.random() < wat) {
       winds.push(new Wind());
+      wind.play();
     }
   }
   /*
@@ -66,11 +89,14 @@ function draw() {
 */
   snows.push(new Snow());
   for (var n = 0; n < snows.length; n++) {
-    if (snows[n].loc.y >= height || snows[n].loc.x <= -2 || snows[n].loc.x >
-      width + 200
+    if (snows[n].loc.y >= height || snows[n].loc.x <= -200 || snows[n].loc.x >
+      width + 400 || snows[n].loc.y < -2
     ) {
       snows.splice(n, 1);
       //snows[n].reset();
+    }
+    if (bird.hitGround || bird.hitTube) {
+      snows[n].still = true;
     }
     snows[n].renew();
     snows[n].addF(gravity);
@@ -82,7 +108,7 @@ function draw() {
     if (tubes[j].loc.x < -tubes[j].w) {
       tubes.splice(j, 1);
     }
-    if (!bird.hitGround && !bird.hitTube) {
+    if (init && !bird.hitGround && !bird.hitTube) {
       tubes[j].update();
     }
     bird.check(tubes[j]);
@@ -90,7 +116,7 @@ function draw() {
   }
 
   for (var i = 0; i < winds.length; i++) {
-    if (!bird.hitGround && !bird.hitTube) {
+    if (init && !bird.hitGround && !bird.hitTube) {
       winds[i].move();
     }
 
@@ -101,8 +127,8 @@ function draw() {
     bird.addForce(winds[i].blow());
 
     winds[i].view();
-    if (bird.countScore >= 40) {
-      winds[i].change = true;
+    if (bird.countScore >= 25) {
+      winds[i].change = Math.random() > 0.3 ? true : false;
     }
 
     if (winds[i].loc.x < -winds[i].radius) {
@@ -119,7 +145,7 @@ function draw() {
 }
 
 $(window).keydown(function (event) {
-  if (event.which === 38 && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+  if (init && event.which === 38 && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
     var fly = new PVector(0, -12);
     bird.addForce(fly);
@@ -134,7 +160,7 @@ $(window).keyup(function (event) {
 });
 
 $(window).mousedown(function () {
-  if (!bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+  if (init && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
     bird.fly = true;
     var fly = new PVector(0, -12);
     bird.addForce(fly);

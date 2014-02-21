@@ -11,17 +11,31 @@
         position: relative;
       }
       canvas{
-        width: 1000px;
         margin: 0 auto;
+        z-index: -1;
+      }
+      .button{
+        position: absolute;
+        left: 440px;
+        top: 300px;
+        width: 300px;
+        height: 80px;
+        font-size: 60px;
+        text-align: center;
+        background-color: red;
+        color: white;
+        z-index: 1;
       }
     </style>
   </head>
   <body>
+    <div class="button" id="play"></div>
   </body>
     <audio id="wing" src="sound/sfx_wing.mp3" type="audio/mp3"></audio>
     <audio id="point" src="sound/sfx_point.mp3" type="audio/mp3"></audio>
     <audio id="hit" src="sound/sfx_hit.mp3" type="audio/mp3"></audio>
     <audio id="die" src="sound/sfx_die.mp3" type="audio/mp3"></audio>
+    <audio id="wind" src="sound/wind.mp3" type="audio/mp3"></audio>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script type="text/javascript" src="http://karenlabs.com/lib/p5.js"></script>
     <!--<script type="text/javascript" src="http://karenlabs.com/lib/hand-1.0.6.js"></script>-->

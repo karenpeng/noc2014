@@ -1,6 +1,7 @@
 function Wind() {
   this.radius = random(40, 100);
-  this.loc = new PVector(width + this.radius, random(0, height));
+  this.loc = new PVector(width + this.radius, random(this.radius, height - this
+    .radius));
   //this.tar = new PVector(random(width, width + 100), random(0, height));
   this.vel = new PVector(-10, 0);
   this.theta = random(0, PI * 2);
@@ -25,8 +26,10 @@ Wind.prototype.move = function () {
 Wind.prototype.blow = function () {
   var copy = this.tar.get();
   var f = copy.sub(this.loc);
-  var littleF = f.mult(0.002);
-  return littleF;
+  var UnitF = f.normalize();
+  var strength = map(f.mag(), 0, width, 0.1, 0);
+  strength = constrain(strength, 0, 0.1);
+  return UnitF.mult(strength);
 };
 
 Wind.prototype.view = function () {
@@ -43,13 +46,27 @@ Wind.prototype.view = function () {
 
 function Snow() {
   this.radius = 2;
-  this.loc = new PVector(random(0, width + 200), -2);
-  this.vel = new PVector(-6, 0.1);
+  this.loc = new PVector(random(-200, width + 400), -2);
+  this.vel = new PVector(0, 0.1);
   this.acc = new PVector(0, 0);
+  this.count = 0;
+  this.still = false;
+  //this.friction = new PVector();
 }
 
 Snow.prototype.renew = function () {
+  if (init && this.count < 1) {
+    this.vel.x -= 6;
+    this.count++;
+  }
+  if (this.still && this.count < 2) {
+    this.vel.x += 6;
+    this.count++;
+  }
   this.loc.add(this.vel);
+  //this.friction = this.acc.get();
+  //this.friction.mult(0.2);
+  //this.vel.add(this.friction);
   this.vel.add(this.acc);
   this.acc.mult(0);
 };
