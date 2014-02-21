@@ -14,6 +14,7 @@ var die = document.getElementById("die");
 var wind = document.getElementById("wind");
 var init = false;
 var lost = false;
+var again = false;
 var counter;
 var ok;
 
@@ -22,12 +23,15 @@ if (!init) {
 }
 
 $(".button").click(function () {
-  $(this).hide();
-  init = true;
+  countDown();
+  if (lost) {
+    again = true;
+    reStart();
+  }
 });
 
 $(".button").hover(function () {
-  $(this).css("cursor", "pointer");
+  $(this).addClass("clickAble");
 });
 
 function setup() {
@@ -41,8 +45,43 @@ function setup() {
   ok = 0;
 }
 
+function countDown() {
+  $(".button").addClass("unClickAble");
+  $(".button").html(3);
+  setTimeout(
+    function () {
+      $(".button").html(2);
+    }, 1000);
+  setTimeout(
+    function () {
+      $(".button").html(1);
+    }, 2000);
+  setTimeout(
+    function () {
+      init = true;
+      $(".button").hide();
+    }, 3000);
+}
+
+function reStart() {
+  bird = null;
+  snows = [];
+  winds = [];
+  tubes = [];
+  wat = 0;
+  counter = 0;
+  hitCount = 0;
+  dieCount = 0;
+  init = false;
+  lost = false;
+  again = false;
+  ok = 0;
+  bird = new Bird();
+}
+
 function draw() {
   if (lost && ok < 1) {
+    $(".button").removeClass("unClickAble");
     $(".button").html("Try Again");
     $(".button").show();
     ok++;

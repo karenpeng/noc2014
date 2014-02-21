@@ -6,7 +6,7 @@ function Bird() {
   this.acc = new PVector(0, 0);
   this.radius1 = 30;
   this.radius2 = 25;
-  this.fly = true;
+  this.fly = false;
   this.omega = 0;
   this.theta = 0;
   this.hitGround = false;
