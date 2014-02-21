@@ -131,22 +131,26 @@ Bird.prototype.check = function (t) {
 
 function Tube() {
   this.sick = false;
+  //this.sick = true;
   this.w = 66;
   this.h = round(random(100, 340));
+  this.or = 200;
   this.gap = 260;
   this.loc = new PVector(width + this.w, 0);
   this.vel = new PVector(-10, 0);
   this.pass = false;
   this.theta = 0;
+  this.scale = 40;
+  this.increment = 0.06;
 }
 
 Tube.prototype.update = function () {
-  if (!this.sick) {
-    this.loc.add(this.vel);
-  } else {
-    this.h += sin(theta) * 30;
-    this.theta += 0.5;
+  if (this.sick) {
+    this.h = 200;
+    this.h = this.or + sin(this.theta) * this.scale;
+    this.theta += this.increment;
   }
+  this.loc.add(this.vel);
 };
 
 Tube.prototype.view = function () {

@@ -155,6 +155,19 @@ function draw() {
     }
     bird.check(tubes[j]);
     tubes[j].view();
+    if (!tubes[j].pass) {
+      if (bird.countScore >= 50) {
+        tubes[j].sick = true;
+      }
+      if (bird.countScore >= 56) {
+        tubes[j].scale = 60;
+        tubes[j].increment = 0.1;
+      }
+      if (bird.countScore >= 62) {
+        tubes[j].scale = 80;
+        tubes[j].increment = 0.2;
+      }
+    }
   }
 
   for (var i = 0; i < winds.length; i++) {
