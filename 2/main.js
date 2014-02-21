@@ -170,7 +170,7 @@ function draw() {
 
     winds[i].view();
     if (bird.countScore >= 25) {
-      winds[i].change = Math.random() > 0.3 ? true : false;
+      winds[i].change = Math.random() > 0.6 ? true : false;
     }
 
     if (winds[i].loc.x < -winds[i].radius) {
@@ -192,7 +192,7 @@ $(window).keydown(function (event) {
       bird.fly = true;
       var fly = new PVector(0, -18);
       bird.addForce(fly);
-      wing.pause();
+      //wing.pause();
       wing.play();
     }
     if (event.which === 37) {
@@ -214,7 +214,7 @@ $(window).mousedown(function () {
     bird.fly = true;
     var fly = new PVector(0, -18);
     bird.addForce(fly);
-    wing.pause();
+    //wing.pause();
     wing.play();
   }
 });
