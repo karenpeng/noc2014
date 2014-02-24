@@ -13,13 +13,13 @@ Ball.prototype.update = function () {
   this.loc.add(this.vel);
   this.acc.mult(0);
   if (this.loc.x <= this.mass || this.loc.x >= width - this.mass) {
-    this.vel.x *= -1;
+    this.vel.x *= -1.2;
   }
   if (this.loc.y <= this.mass || this.loc.y >= height - this.mass) {
-    this.vel.y *= -1;
+    this.vel.y *= -1.2;
   }
-  //this.loc.x = constrain(this.loc.x, this.mass, width - this.mass);
-  //this.loc.y = constrain(this.loc.y, this.mass, height - this.mass);
+  this.loc.x = constrain(this.loc.x, this.mass, width - this.mass);
+  this.loc.y = constrain(this.loc.y, this.mass, height - this.mass);
 };
 
 Ball.prototype.applyForce = function (force) {
@@ -85,6 +85,27 @@ Spring.prototype.connect = function () {
 Spring.prototype.constrainLength = function (minlen, maxlen) {
   var dir = PVector.sub(this.b1.loc, this.b2.loc);
   var d = dir.mag();
+  /*
+  if (d < minlen) {
+    dir.normalize();
+    dir.mult(minlen);
+    var copy1 = this.b1.loc;
+    var copy2 = this.b2.loc;
+    this.b1.loc = PVector.add(copy2, dir / 2);
+    this.b2.loc = PVector.add(copy1, -1 * dir / 2);
+    this.b1.vel.mult(0.5);
+    this.b2.vel.mult(0.5);
+  } else if (d > maxlen) {
+    dir.normalize();
+    dir.mult(maxlen);
+    var copy3 = this.b1.loc;
+    var copy4 = this.b2.loc;
+    this.b1.loc = PVector.add(copy4.loc, dir / 2);
+    this.b2.loc = PVector.add(copy3, -1 * dir / 2);
+    this.b1.vel.mult(0.5);
+    this.b2.vel.mult(0.5);
+  }
+  */
   if (d < minlen) {
     dir.normalize();
     dir.mult(minlen);
@@ -120,18 +141,11 @@ function Mash(number, bones) {
   this.s = [];
   this.n = number;
   this.skeleton = false;
-  /*
-  for (var theta = 0; theta < 2 * PI; theta += PI / 3) {
-    this.b.push(new Ball(width / 2 + cos(theta) * this.radius, height / 2 + sin(
-      theta) * this.radius));
-    this.s.push(new Spring());
-  }
-  */
+
   for (var j = 0; j < this.n; j++) {
-    this.b.push(new Ball(width / 2 + cos(j * PI / this.n * 2) * 120, height / 3 +
+    this.b.push(new Ball(width / 2 + cos(j * PI / this.n * 2) * 100, height / 3 +
       sin(j * PI /
-        this.n * 2) * 120, 10));
-    //this.s.push(new Spring(width / 2, height / 2, 100));
+        this.n * 2) * 100, 10));
   }
 
   for (var i = 0; i < Math.floor(this.n / bones); i++) {
@@ -172,7 +186,7 @@ Mash.prototype.renew = function () {
     //if (this.skeleton) {
     item.displayLine();
     //}
-    item.constrainLength(60, 280);
+    item.constrainLength(40, 220);
   });
 };
 
@@ -198,3 +212,44 @@ Mash.prototype.show = function () {
   //curveVertex(0, 0);
   endShape(CLOSE);
 };
+
+////////////////////////////////////////////////////////////
+function Jumper(number) {
+  this.b = [];
+  this.s = [];
+  this.n = number;
+
+  for (var i = 0; i < number; i++) {
+    this.b.push(new Ball(i * width / number, height - 60, 10));
+  }
+  for (var j = 0; j < number - 1; j++) {
+    this.s.push(new Spring(this.b[j], this.b[j + 1], width / number));
+  }
+}
+
+Jumper.prototype.refresh = function () {
+  this.b[0].loc.x = 0;
+  this.b[0].loc.y = height - 60;
+  this.b[Math.floor(this.n - 1)].loc.x = (this.n - 1) * 60;
+  this.b[Math.floor(this.n - 1)].loc.y = height - 60;
+  this.b.forEach(function (item) {
+    item.update();
+    item.render();
+    item.drag(mouseX, mouseY);
+  });
+  this.s.forEach(function (item) {
+    item.connect();
+    item.displayLine();
+    item.constrainLength(30, 100);
+  });
+};
+
+Jumper.prototype.check = function (b) {
+  var up = new PVector(0, -10);
+  for (var i = 0; i < this.b.length; i++) {
+    var dis = dist(b.loc.x, b.loc.y, this.b[i].loc.x, this.b[i].loc.y);
+    if (dis <= b.mass + this.b.mass) {
+      b.applyForce(up);
+    }
+  }
+}
