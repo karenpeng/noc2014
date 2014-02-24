@@ -1,18 +1,20 @@
 var b, s;
 var gravity;
 var mash;
+var jump;
 
 function setup() {
-  createGraphics(1200, 700);
+  createGraphics(1100, 500);
   smooth();
   //b = new Ball(width / 2, 100);
   //s = new Spring(width / 2, 10, 100);
-  //gravity = new PVector(0, 2);
-  mash = new Mash(32);
+  gravity = new PVector(0, 2);
+  mash = new Mash(31, 4);
+  jump = new PVector(0, -10);
 }
 
 function draw() {
-  background(255);
+  background(220);
   /*
   b.applyForce(gravity);
   s.connect(b);
@@ -24,19 +26,36 @@ function draw() {
   s.view();
   */
   mash.renew();
-  //=mash.show();
+  if (!mash.skeleton) {
+    mash.show();
+  }
+  mash.appF(gravity);
 }
 
-$(window).mousedown(function (e) {
+$(window).mousedown(function (event) {
   event.preventDefault();
   mash.b.forEach(function (item) {
-    item.clicked(e.pageX, e.pageY);
+    item.clicked(event.pageX, event.pageY);
   });
 });
 
-$(window).mouseup(function (e) {
+$(window).mouseup(function (event) {
   event.preventDefault();
   mash.b.forEach(function (item) {
     item.stopDragging();
   });
+});
+
+$(window).keydown(function (event) {
+  event.preventDefault();
+  if (event.which === 32) {
+    mash.skeleton = !mash.skeleton;
+  }
+});
+
+$(window).keydown(function (event) {
+  event.preventDefault();
+  if (event.which === 38) {
+    mash.appF(jump);
+  }
 });
