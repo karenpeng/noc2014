@@ -23,7 +23,7 @@ Ball.prototype.applyForce = function (force) {
 
 Ball.prototype.render = function () {
   stroke(0);
-  strokeWeight(2);
+  strokeWeight(1);
   fill(175);
   if (this.dragging) {
     fill(50);
@@ -52,22 +52,26 @@ Ball.prototype.drag = function (x, y) {
 };
 
 ///////////////////////////////////////////////////////////////
-function Spring(x, y, l) {
-  this.anchor = new PVector(x, y);
+function Spring(b1, b2, l) {
+  this.anchor = new PVector();
   this.len = l;
   this.k = 0.6;
+  this.b1 = b1;
+  this.b2 = b2;
 }
 
-Spring.prototype.connect = function (b) {
-  var f = PVector.sub(b.loc, this.anchor);
+Spring.prototype.connect = function () {
+  var f = PVector.sub(this.b1.loc, this.b2.loc);
   var d = f.mag();
   var stretch = d - this.len;
   f.normalize();
   f.mult(-1 * this.k * stretch);
   //wow do sth to the ball in spring
-  b.applyForce(f);
+  this.b1.applyForce(f);
+  f.mult(-1);
+  this.b2.applyForce(f);
 };
-
+/*
 Spring.prototype.constrainLength = function (b, minlen, maxlen) {
   var dir = PVector.sub(b.loc, this.anchor);
   var d = dir.mag();
@@ -83,19 +87,20 @@ Spring.prototype.constrainLength = function (b, minlen, maxlen) {
     b.vel.mult(0);
   }
 };
-
+*/
+/*
 Spring.prototype.view = function () {
   stroke(0);
   fill(175);
   strokeWeight(2);
   rectMode(CENTER);
-  rect(this.anchor.x, this.anchor.y, 10, 10);
+  //rect(this.anchor.x, this.anchor.y, 10, 10);
 };
-
-Spring.prototype.displayLine = function (b) {
-  strokeWeight(2);
+*/
+Spring.prototype.displayLine = function () {
+  strokeWeight(1);
   stroke(0);
-  line(b.loc.x, b.loc.y, this.anchor.x, this.anchor.y);
+  line(this.b1.loc.x, this.b1.loc.y, this.b2.loc.x, this.b2.loc.y);
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -111,41 +116,62 @@ function Mash(number) {
     this.s.push(new Spring());
   }
   */
-  for (var i = 0; i < this.n; i++) {
-    this.b.push(new Ball(width / 2, height / 2, 10));
-    this.s.push(new Spring(width / 2, height / 2, 100));
+  for (var j = 0; j < this.n; j++) {
+    this.b.push(new Ball(width / 4 + cos(j * PI / this.n * 2) * 150, height / 4 +
+      sin(j * PI /
+        this.n * 2) * 150, 10));
+    //this.s.push(new Spring(width / 2, height / 2, 100));
   }
+  this.link(6, this.n);
+  this.link(10, this.n);
+  this.link(14, this.n);
+  this.link(18, this.n);
 }
 
-Mash.prototype.update = function () {
-  for (var j = 0; j < this.n; j++) {
-    //var center = new PVector(width / 2, height / 2);
-    var tar = new PVector(cos(j * PI / this.n * 2) * 2, sin(j * PI /
-      this.n * 2) * 2);
-    //var f = PVector.add(center, tar);
-    this.b[j].applyForce(tar);
-    this.s[j].connect(this.b[j]);
-    this.s[j].constrainLength(this.b[j], 30, 200);
-    this.b[j].update();
-    this.b[j].drag(mouseX, mouseY);
+Mash.prototype.link = function (interval, n) {
+  for (var j = 0; j < n - interval; j++) {
+    var dis1 = dist(this.b[j].loc.x, this.b[j].loc.y, this.b[j + interval].loc.x,
+      this.b[j + interval].loc.y);
+    this.s.push(new Spring(this.b[j], this.b[j + interval], dis1));
+  }
+  var m = 0;
+  for (var k = n - interval; k < n; k++) {
+    var dis2 = dist(this.b[k].loc.x, this.b[k].loc.y, this.b[m].loc.x, this.b[m]
+      .loc.y);
+    this.s.push(new Spring(this.b[k], this.b[m], dis2));
+    m++;
   }
 };
 
+Mash.prototype.renew = function () {
+  var j = 0;
+  this.b.forEach(function (item) {
+    //var tar = new PVector(cos(j * PI /this.n * 2) * 2, sin(j * PI /this.n * 2) * 2);
+    //var f = PVector.add(center, tar);
+    //item.applyForce(tar);
+    item.update();
+    item.render();
+    item.drag(mouseX, mouseY);
+    text(j, item.loc.x, item.loc.y + 20);
+    j++;
+  });
+  this.s.forEach(function (item) {
+    item.connect();
+    item.displayLine();
+  });
+};
+
 Mash.prototype.show = function () {
-  for (var i = 0; i < this.n; i++) {
-    this.s[i].displayLine(this.b[i]);
-    this.b[i].render();
-    this.s[i].view();
-  }
-  strokeWeight(3);
+
+  strokeWeight(1);
   stroke(0);
   //fill(100);
   noFill();
   beginShape();
   //curveVertex(0, 0);
-  for (var j = 0; j < this.n; j++) {
+  for (var k = 0; k < this.n; k++) {
     //curveVertex(this.b[j].loc.x, this.b[j].loc.y);
-    vertex(this.b[j].loc.x, this.b[j].loc.y);
+    vertex(this.b[k].loc.x, this.b[k].loc.y);
   }
   //curveVertex(0, 0);
   endShape(CLOSE);

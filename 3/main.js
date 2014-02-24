@@ -23,8 +23,8 @@ function draw() {
   b.render();
   s.view();
   */
-  mash.update();
-  mash.show();
+  mash.renew();
+  //=mash.show();
 }
 
 $(window).mousedown(function (e) {
