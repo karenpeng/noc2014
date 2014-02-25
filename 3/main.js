@@ -12,7 +12,7 @@ function setup() {
   gravity = new PVector(0, 2);
   mash = new Mash(31, 4);
   jump = new PVector(0, -160);
-  jumper = new Jumper(width / 30);
+  jumper = new Jumper(width / 10);
 }
 
 function draw() {

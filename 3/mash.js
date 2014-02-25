@@ -62,12 +62,14 @@ Ball.prototype.drag = function (x, y) {
 };
 
 ///////////////////////////////////////////////////////////////
-function Spring(b1, b2, l) {
+function Spring(b1, b2, l, minlen, maxlen) {
   this.anchor = new PVector();
   this.len = l;
   this.k = 0.2;
   this.b1 = b1;
   this.b2 = b2;
+  this.min = minlen;
+  this.max = maxlen;
 }
 
 Spring.prototype.connect = function () {
@@ -82,52 +84,22 @@ Spring.prototype.connect = function () {
   this.b2.applyForce(f);
 };
 
-Spring.prototype.constrainLength = function (minlen, maxlen) {
+Spring.prototype.constrainLength = function () {
   var dir = PVector.sub(this.b1.loc, this.b2.loc);
   var d = dir.mag();
-  /*
-  if (d < minlen) {
+  if (d < this.min) {
     dir.normalize();
-    dir.mult(minlen);
-    var copy1 = this.b1.loc;
-    var copy2 = this.b2.loc;
-    this.b1.loc = PVector.add(copy2, dir / 2);
-    this.b2.loc = PVector.add(copy1, -1 * dir / 2);
-    this.b1.vel.mult(0.5);
-    this.b2.vel.mult(0.5);
-  } else if (d > maxlen) {
-    dir.normalize();
-    dir.mult(maxlen);
-    var copy3 = this.b1.loc;
-    var copy4 = this.b2.loc;
-    this.b1.loc = PVector.add(copy4.loc, dir / 2);
-    this.b2.loc = PVector.add(copy3, -1 * dir / 2);
-    this.b1.vel.mult(0.5);
-    this.b2.vel.mult(0.5);
-  }
-  */
-  if (d < minlen) {
-    dir.normalize();
-    dir.mult(minlen);
+    dir.mult(this.min);
     this.b1.loc = PVector.add(this.b2.loc, dir);
     this.b1.vel.mult(0);
-  } else if (d > maxlen) {
+  } else if (d > this.max) {
     dir.normalize();
-    dir.mult(maxlen);
+    dir.mult(this.max);
     this.b1.loc = PVector.add(this.b2.loc, dir);
     this.b1.vel.mult(0);
   }
 };
 
-/*
-Spring.prototype.view = function () {
-  stroke(0);
-  fill(175);
-  strokeWeight(2);
-  rectMode(CENTER);
-  //rect(this.anchor.x, this.anchor.y, 10, 10);
-};
-*/
 Spring.prototype.displayLine = function () {
   strokeWeight(1);
   stroke(0);
@@ -148,22 +120,27 @@ function Mash(number, bones) {
         this.n * 2) * 100, 10));
   }
 
-  for (var i = 0; i < Math.floor(this.n / bones); i++) {
-    this.link((i + 1) * bones, this.n);
+  for (var i = 0; i < this.n - 1; i++) {
+    this.s.push(new Spring(this.b[i], this.b[i + 1], 8, 3, 30));
+  }
+
+  for (var k = 0; k < Math.floor(this.n / bones); k++) {
+    this.link((k + 1) * bones, this.n);
   }
 }
 
 Mash.prototype.link = function (interval, n) {
+
   for (var j = 0; j < n - interval; j++) {
     var dis1 = dist(this.b[j].loc.x, this.b[j].loc.y, this.b[j + interval].loc.x,
       this.b[j + interval].loc.y);
-    this.s.push(new Spring(this.b[j], this.b[j + interval], dis1));
+    this.s.push(new Spring(this.b[j], this.b[j + interval], dis1, 40, 220));
   }
   var m = 0;
   for (var k = n - interval; k < n; k++) {
     var dis2 = dist(this.b[k].loc.x, this.b[k].loc.y, this.b[m].loc.x, this.b[m]
       .loc.y);
-    this.s.push(new Spring(this.b[k], this.b[m], dis2));
+    this.s.push(new Spring(this.b[k], this.b[m], dis2, 40, 220));
     m++;
   }
 };
@@ -186,7 +163,7 @@ Mash.prototype.renew = function () {
     //if (this.skeleton) {
     item.displayLine();
     //}
-    item.constrainLength(40, 220);
+    item.constrainLength();
   });
 };
 
@@ -220,11 +197,13 @@ function Jumper(number) {
   this.n = number;
 
   for (var i = 0; i < number; i++) {
-    this.b.push(new Ball(i * width / number, height - 60, 10));
+    this.b.push(new Ball(i * width / number, height - 60, 8));
   }
   for (var j = 0; j < number - 1; j++) {
-    this.s.push(new Spring(this.b[j], this.b[j + 1], width / number));
+    var l = Math.floor(width / number);
+    this.s.push(new Spring(this.b[j], this.b[j + 1], l));
   }
+
 }
 
 Jumper.prototype.refresh = function () {
@@ -240,7 +219,7 @@ Jumper.prototype.refresh = function () {
   this.s.forEach(function (item) {
     item.connect();
     item.displayLine();
-    item.constrainLength(30, 100);
+    item.constrainLength(10, 60);
   });
 };
 
@@ -252,4 +231,4 @@ Jumper.prototype.check = function (b) {
       b.applyForce(up);
     }
   }
-}
+};
