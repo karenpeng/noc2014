@@ -1,6 +1,8 @@
 var gravity, up;
 var mash;
 var jumper;
+var threshold;
+var invisibleSpring;
 
 function setup() {
   createGraphics(1100, 660);
@@ -9,6 +11,8 @@ function setup() {
   up = new PVector(0, -140);
   mash = new Mash(19, 4, 100);
   jumper = new Mash(width / 20);
+  invisible = 30;
+  invisibleSpring = [];
 }
 
 function draw() {
@@ -20,7 +24,29 @@ function draw() {
   }
   mash.addF(gravity);
   jumper.renew();
-  jumper.addF(gravity);
+  //jumper.addF(gravity);
+
+  mash.b.forEach(function (item) {
+    jumper.b.forEach(function (key) {
+      var sub = PVector.sub(item.loc, key.loc);
+      var dis = sub.mag();
+      if (dis < invisible && abs(item.loc.x - key.loc.x) < 10) {
+        invisibleSpring.push(new Spring(item, key));
+      }
+    });
+  });
+
+  for (var i = invisibleSpring.length; i > 0; i--) {
+
+    var sub = PVector.sub(invisibleSpring[i].b1, invisibleSpring[i].b2);
+    var dis = sub.mag();
+    if (dis > threshold) {
+      invisibleSpring.splice(i, 1);
+    }
+    //element.connect();
+    invisibleSpring[i].displayLine();
+    //element.constrainLength();
+  }
 
   strokeWeight(0.2);
   text("press 'up' to jump, press 'space' to see the skeleton", 10, 20);
@@ -60,6 +86,6 @@ $(window).keydown(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 38) {
-    mash.appF(up);
+    mash.addF(up);
   }
 });

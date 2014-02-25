@@ -6,6 +6,7 @@ function Ball(x, y, m) {
   this.damping = 0.98;
   this.dragging = false;
   this.mass = m;
+  this.check = false;
 }
 Ball.prototype.update = function () {
   this.vel.add(this.acc);
@@ -114,7 +115,11 @@ Spring.prototype.constrainLength = function () {
       this.b1.vel.mult(0);
     }
   } else {
+    //if (this.anchor.x > this.b1.loc.x) {
     dir = PVector.sub(this.b1.loc, this.anchor);
+    // } else {
+    //dir = PVector.sub(this.anchor, this.b1.loc);
+    //}
     d = dir.mag();
     if (d < this.min) {
       dir.normalize();
@@ -138,6 +143,7 @@ Spring.prototype.displayLine = function () {
     line(this.b1.loc.x, this.b1.loc.y, this.b2.loc.x, this.b2.loc.y);
   } else {
     line(this.b1.loc.x, this.b1.loc.y, this.anchor.x, this.anchor.y);
+    ellipse(this.anchor.x, this.anchor.y, 4, 4);
   }
 };
 
@@ -173,7 +179,8 @@ function Mash(number, bones, size) {
     }
 
     var anchor1 = new PVector(6, height - 160);
-    var anchor2 = new PVector(width - 6, height - 160);
+    var anchor2 = new PVector(this.b[number - 4].loc.x + Math.floor(width /
+      number) * 1 + 12, height - 160);
 
     this.s.push(new Spring(this.b[0], anchor1));
     this.s.push(new Spring(this.b[number - 4], anchor2));
@@ -183,8 +190,8 @@ function Mash(number, bones, size) {
     }
 
     this.s.forEach(function (item) {
-      item.max *= 0.6;
-      item.min *= 1.4;
+      item.min *= 1.3;
+      item.max *= 0.7;
     });
   }
 
