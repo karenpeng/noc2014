@@ -30,8 +30,11 @@ function draw() {
     jumper.b.forEach(function (key) {
       var sub = PVector.sub(item.loc, key.loc);
       var dis = sub.mag();
-      if (dis < invisible && abs(item.loc.x - key.loc.x) < 10) {
+      if (!item.check && !key.check && dis < invisible && abs(item.loc.x -
+        key.loc.x) < 10) {
         invisibleSpring.push(new Spring(item, key));
+        item.check = true;
+        key.check = true;
       }
     });
   });
