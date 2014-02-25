@@ -30,11 +30,11 @@ $(window).mousedown(function (event) {
   mash.b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
-  /*
+
   jumper.bb.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
-*/
+
 });
 
 $(window).mouseup(function (event) {
@@ -42,11 +42,11 @@ $(window).mouseup(function (event) {
   mash.b.forEach(function (item) {
     item.stopDragging();
   });
-  /*
+
   jumper.bb.forEach(function (item) {
     item.stopDragging();
   });
-*/
+
 });
 
 $(window).keydown(function (event) {

@@ -146,21 +146,26 @@ function Mash(number, bones, size) {
   this.b = [];
   this.s = [];
   this.n = number;
-  this.skeleton = false;
+  if (bones && size) {
 
-  for (var j = 0; j < this.n; j++) {
-    this.b.push(new Ball(width / 2 + cos(j * PI / this.n * 2) * size, height /
-      3 +
-      sin(j * PI /
-        this.n * 2) * size, 10));
-  }
+    this.skeleton = false;
 
-  for (var i = 0; i < this.n - 1; i++) {
-    this.s.push(new Spring(this.b[i], this.b[i + 1]));
-  }
+    for (var j = 0; j < this.n; j++) {
+      this.b.push(new Ball(width / 2 + cos(j * PI / this.n * 2) * size, height /
+        3 +
+        sin(j * PI /
+          this.n * 2) * size, 10));
+    }
 
-  for (var k = 0; k < Math.floor(this.n / bones); k++) {
-    this.link((k + 1) * bones, this.n);
+    for (var i = 0; i < this.n - 1; i++) {
+      this.s.push(new Spring(this.b[i], this.b[i + 1]));
+    }
+
+    for (var k = 0; k < Math.floor(this.n / bones); k++) {
+      this.link((k + 1) * bones, this.n);
+    }
+  } else {
+
   }
 }
 
@@ -220,21 +225,23 @@ Mash.prototype.show = function () {
 };
 
 ////////////////////////////////////////////////////////////
+jumper = new Mash();
+
 function Jumper(number) {
   this.bb = [];
   this.ss = [];
   this.nn = number;
 
-  for (var i = 1; i < number - 1; i++) {
-    this.bb.push(new Ball(i * Math.floor(width / number), height - 60, 8));
+  for (var i = 0; i < number - 3; i++) {
+    this.bb.push(new Ball((i + 2) * Math.floor(width / number), height - 60, 6));
   }
-  var anchor1 = new PVector(60, height - 60);
-  var anchor2 = new PVector(width - 60, height - 60);
+  var anchor1 = new PVector(6, height - 60);
+  var anchor2 = new PVector(width - 6, height - 60);
 
-  //this.ss.push(new Spring(this.bb[0], anchor1));
-  //this.ss.push(new Spring(this.bb[number - 2], anchor2));
+  this.ss.push(new Spring(this.bb[0], anchor1));
+  this.ss.push(new Spring(this.bb[number - 4], anchor2));
 
-  for (var j = 1; j < number - 2; j++) {
+  for (var j = 0; j < number - 4; j++) {
     this.ss.push(new Spring(this.bb[j], this.bb[j + 1]));
   }
 }
