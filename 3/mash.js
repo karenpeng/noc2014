@@ -59,6 +59,7 @@ Ball.prototype.drag = function (x, y) {
 };
 
 ///////////////////////////////////////////////////////////////
+
 function Spring(b1, b2) {
   this.k = 0.2;
   this.b1 = b1;
@@ -141,6 +142,7 @@ Spring.prototype.displayLine = function () {
 };
 
 ///////////////////////////////////////////////////////////////////
+
 function Mash(number, bones, size) {
   this.b = [];
   this.s = [];
@@ -166,11 +168,12 @@ function Mash(number, bones, size) {
   } else {
 
     for (var m = 0; m < number - 3; m++) {
-      this.b.push(new Ball((m + 2) * Math.floor(width / number), height - 60, 6));
+      this.b.push(new Ball((m + 2) * Math.floor(width / number), height - 160,
+        6));
     }
 
-    var anchor1 = new PVector(6, height - 60);
-    var anchor2 = new PVector(width - 6, height - 60);
+    var anchor1 = new PVector(6, height - 160);
+    var anchor2 = new PVector(width - 6, height - 160);
 
     this.s.push(new Spring(this.b[0], anchor1));
     this.s.push(new Spring(this.b[number - 4], anchor2));
@@ -178,6 +181,11 @@ function Mash(number, bones, size) {
     for (var n = 0; n < number - 4; n++) {
       this.s.push(new Spring(this.b[n], this.b[n + 1]));
     }
+
+    this.s.forEach(function (item) {
+      item.max *= 0.6;
+      item.min *= 1.4;
+    });
   }
 
 }
@@ -211,7 +219,7 @@ Mash.prototype.renew = function () {
   });
 };
 
-Mash.prototype.appF = function (f) {
+Mash.prototype.addF = function (f) {
   this.b.forEach(function (item) {
     var force = new PVector(f.x, f.y);
     item.applyForce(force);

@@ -3,11 +3,10 @@ var mash;
 var jumper;
 
 function setup() {
-  createGraphics(1100, 500);
+  createGraphics(1100, 660);
   smooth();
   gravity = new PVector(0, 2);
   up = new PVector(0, -140);
-
   mash = new Mash(19, 4, 100);
   jumper = new Mash(width / 20);
 }
@@ -19,8 +18,9 @@ function draw() {
   if (!mash.skeleton) {
     mash.show();
   }
-  mash.appF(gravity);
+  mash.addF(gravity);
   jumper.renew();
+  jumper.addF(gravity);
 
   strokeWeight(0.2);
   text("press 'up' to jump, press 'space' to see the skeleton", 10, 20);
