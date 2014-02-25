@@ -63,7 +63,6 @@ function Spring(b1, b2) {
   this.k = 0.2;
   this.b1 = b1;
   if (b2.hasOwnProperty("acc")) {
-    console.log("acc");
     this.b2 = b2;
     this.len = PVector.sub(b1.loc, b2.loc);
   } else {
@@ -166,7 +165,21 @@ function Mash(number, bones, size) {
     }
   } else {
 
+    for (var m = 0; m < number - 3; m++) {
+      this.b.push(new Ball((m + 2) * Math.floor(width / number), height - 60, 6));
+    }
+
+    var anchor1 = new PVector(6, height - 60);
+    var anchor2 = new PVector(width - 6, height - 60);
+
+    this.s.push(new Spring(this.b[0], anchor1));
+    this.s.push(new Spring(this.b[number - 4], anchor2));
+
+    for (var n = 0; n < number - 4; n++) {
+      this.s.push(new Spring(this.b[n], this.b[n + 1]));
+    }
   }
+
 }
 
 Mash.prototype.link = function (interval, n) {
@@ -182,15 +195,12 @@ Mash.prototype.link = function (interval, n) {
 };
 
 Mash.prototype.renew = function () {
-  var j = 0;
   this.b.forEach(function (item) {
     item.update();
     //if (this.skeleton) {
     item.render();
     //}
     item.drag(mouseX, mouseY);
-    text(j, item.loc.x, item.loc.y + 20);
-    j++;
   });
   this.s.forEach(function (item) {
     item.connect();
@@ -222,49 +232,4 @@ Mash.prototype.show = function () {
   }
   //curveVertex(0, 0);
   endShape(CLOSE);
-};
-
-////////////////////////////////////////////////////////////
-jumper = new Mash();
-
-function Jumper(number) {
-  this.bb = [];
-  this.ss = [];
-  this.nn = number;
-
-  for (var i = 0; i < number - 3; i++) {
-    this.bb.push(new Ball((i + 2) * Math.floor(width / number), height - 60, 6));
-  }
-  var anchor1 = new PVector(6, height - 60);
-  var anchor2 = new PVector(width - 6, height - 60);
-
-  this.ss.push(new Spring(this.bb[0], anchor1));
-  this.ss.push(new Spring(this.bb[number - 4], anchor2));
-
-  for (var j = 0; j < number - 4; j++) {
-    this.ss.push(new Spring(this.bb[j], this.bb[j + 1]));
-  }
-}
-
-Jumper.prototype.refresh = function () {
-  this.bb.forEach(function (item) {
-    item.update();
-    item.render();
-    item.drag(mouseX, mouseY);
-  });
-  this.ss.forEach(function (item) {
-    item.connect();
-    item.displayLine();
-    item.constrainLength();
-  });
-};
-
-Jumper.prototype.check = function (b) {
-  var up = new PVector(0, -10);
-  for (var i = 0; i < this.b.length; i++) {
-    var dis = dist(b.loc.x, b.loc.y, this.b[i].loc.x, this.b[i].loc.y);
-    if (dis <= b.mass + this.b.mass) {
-      b.applyForce(up);
-    }
-  }
 };

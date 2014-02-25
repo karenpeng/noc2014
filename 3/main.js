@@ -1,4 +1,4 @@
-var gravity, jump;
+var gravity, up;
 var mash;
 var jumper;
 
@@ -6,9 +6,10 @@ function setup() {
   createGraphics(1100, 500);
   smooth();
   gravity = new PVector(0, 2);
-  mash = new Mash(31, 4, 100);
-  jump = new PVector(0, -140);
-  jumper = new Jumper(width / 10);
+  up = new PVector(0, -140);
+
+  mash = new Mash(19, 4, 100);
+  jumper = new Mash(width / 20);
 }
 
 function draw() {
@@ -19,10 +20,10 @@ function draw() {
     mash.show();
   }
   mash.appF(gravity);
-  jumper.refresh();
+  jumper.renew();
 
   strokeWeight(0.2);
-  text("press 'up' to jump, press 'space' to see the skeleton", 10, height - 30);
+  text("press 'up' to jump, press 'space' to see the skeleton", 10, 20);
 }
 
 $(window).mousedown(function (event) {
@@ -31,7 +32,7 @@ $(window).mousedown(function (event) {
     item.clicked(event.pageX, event.pageY);
   });
 
-  jumper.bb.forEach(function (item) {
+  jumper.b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
 
@@ -43,7 +44,7 @@ $(window).mouseup(function (event) {
     item.stopDragging();
   });
 
-  jumper.bb.forEach(function (item) {
+  jumper.b.forEach(function (item) {
     item.stopDragging();
   });
 
@@ -59,6 +60,6 @@ $(window).keydown(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 38) {
-    mash.appF(jump);
+    mash.appF(up);
   }
 });
