@@ -67,6 +67,8 @@ function Spring(b1, b2) {
   if (b2.hasOwnProperty("acc")) {
     this.b2 = b2;
     this.len = PVector.sub(b1.loc, b2.loc);
+    this.b1Num;
+    this.b2Num;
   } else {
     this.anchor = b2.get();
     this.len = new PVector.sub(b1.loc, b2);
@@ -190,8 +192,8 @@ function Mash(number, bones, size) {
     }
 
     this.s.forEach(function (item) {
-      item.min *= 1.3;
-      item.max *= 0.7;
+      item.max *= 1.2;
+      item.min *= 0.8;
     });
   }
 

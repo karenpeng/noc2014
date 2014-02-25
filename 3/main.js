@@ -25,7 +25,7 @@ function draw() {
   mash.addF(gravity);
   jumper.renew();
   //jumper.addF(gravity);
-
+  /*
   mash.b.forEach(function (item) {
     jumper.b.forEach(function (key) {
       var sub = PVector.sub(item.loc, key.loc);
@@ -38,17 +38,34 @@ function draw() {
       }
     });
   });
-
-  for (var i = invisibleSpring.length; i > 0; i--) {
-
-    var sub = PVector.sub(invisibleSpring[i].b1, invisibleSpring[i].b2);
-    var dis = sub.mag();
-    if (dis > threshold) {
-      invisibleSpring.splice(i, 1);
+*/
+  for (var j = 0; j < mash.b.length - 1; j++) {
+    for (var k = 0; k < jumper.b.length - 1; k++) {
+      var sub = PVector.sub(mash.b[j].loc, jumper.b[k].loc);
+      var dis = sub.mag();
+      if (!mash.b[j].check && !jumper.b[k].check && dis < invisible && abs(mash
+        .b[j].loc.x -
+        jumper.b[k].loc.x) < 10) {
+        invisibleSpring.push(new Spring(mash.b[j], jumper.b[k]));
+        mash.b[j].check = true;
+        jumper.b[k].check = true;
+        invisibleSpring.b1Num = j;
+        invisibleSpring.b2Num = k;
+      }
     }
-    //element.connect();
+  }
+
+  for (var i = invisibleSpring.length - 1; i > -1; i--) {
+    invisibleSpring[i].connect();
     invisibleSpring[i].displayLine();
-    //element.constrainLength();
+    //invisibleSpring[i].constrainLength();
+    var sub1 = PVector.sub(invisibleSpring[i].b1, invisibleSpring[i].b2);
+    var dis1 = sub1.mag();
+    if (dis1 > threshold * 6) {
+      invisibleSpring.splice(i, 1);
+      mash.b[invisibleSpring[i].b1Num].check = false;
+      jumper.b[invisibleSpring[i].b2Num].check = false;
+    }
   }
 
   strokeWeight(0.2);
