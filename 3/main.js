@@ -46,7 +46,7 @@ function draw() {
       if (!mash.b[j].check && !jumper.b[k].check && dis < invisible && abs(mash
         .b[j].loc.x -
         jumper.b[k].loc.x) < 10) {
-        invisibleSpring.push(new Spring(mash.b[j], jumper.b[k]));
+        invisibleSpring.push(new Spring(jumper.b[k], mash.b[j]));
         mash.b[j].check = true;
         jumper.b[k].check = true;
         invisibleSpring.b1Num = j;
