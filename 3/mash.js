@@ -179,8 +179,8 @@ function Mash(number, bones, size) {
     }
 
     var anchor1 = new PVector(6, height - 160);
-    var anchor2 = new PVector(this.b[number - 4].loc.x + Math.floor(width /
-      number) * 1 + 12, height - 160);
+    var anchor2 = new PVector((number - 1) * Math.floor(width / number) + 12,
+      height - 160);
 
     this.s.push(new Spring(this.b[0], anchor1));
     this.s.push(new Spring(this.b[number - 4], anchor2));
