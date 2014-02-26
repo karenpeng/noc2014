@@ -3,6 +3,7 @@ var mash;
 var jumper;
 var threshold;
 var invisibleSpring;
+var counter;
 
 function setup() {
   createGraphics(1100, 660);
@@ -13,6 +14,7 @@ function setup() {
   jumper = new Mash(width / 20);
   invisible = 30;
   invisibleSpring = [];
+  counter = 0;
 }
 
 function draw() {
@@ -39,35 +41,41 @@ function draw() {
     });
   });
 */
-  for (var j = 0; j < mash.b.length - 1; j++) {
-    for (var k = 0; k < jumper.b.length - 1; k++) {
+
+  for (var j = 0; j < mash.b.length; j++) {
+    for (var k = 0; k < jumper.b.length; k++) {
       var sub = PVector.sub(mash.b[j].loc, jumper.b[k].loc);
       var dis = sub.mag();
-      if (!mash.b[j].check && !jumper.b[k].check && dis < invisible && abs(mash
+      if (!mash.b[j].check && !jumper.b[k].check && dis <= invisible && abs(
+        mash
         .b[j].loc.x -
         jumper.b[k].loc.x) < 10) {
-        invisibleSpring.push(new Spring(jumper.b[k], mash.b[j]));
+        invisibleSpring.push(new Spring(mash.b[j], jumper.b[k]));
         mash.b[j].check = true;
         jumper.b[k].check = true;
-        invisibleSpring.b1Num = j;
-        invisibleSpring.b2Num = k;
+        invisibleSpring[counter].b1Num = j;
+        invisibleSpring[counter].b2Num = k;
+        invisibleSpring[counter].max *= 0.8;
+        invisibleSpring[counter].min *= 1.2;
+        counter++;
       }
     }
   }
-
-  for (var i = invisibleSpring.length - 1; i > -1; i--) {
+  /*
+  //for (var i = invisibleSpring.length - 1; i > -1; i--) {
+  for (var i = 0; i < invisibleSpring.length; i++) {
     invisibleSpring[i].connect();
     invisibleSpring[i].displayLine();
-    //invisibleSpring[i].constrainLength();
-    var sub1 = PVector.sub(invisibleSpring[i].b1, invisibleSpring[i].b2);
+    invisibleSpring[i].constrainLength();
+    var sub1 = PVector.sub(invisibleSpring[i].b1.loc, invisibleSpring[i].b2.loc);
     var dis1 = sub1.mag();
-    if (dis1 > threshold * 6) {
-      invisibleSpring.splice(i, 1);
+    if (dis1 > invisible) {
       mash.b[invisibleSpring[i].b1Num].check = false;
       jumper.b[invisibleSpring[i].b2Num].check = false;
+      invisibleSpring.splice(i, 1);
     }
   }
-
+*/
   strokeWeight(0.2);
   text("press 'up' to jump, press 'space' to see the skeleton", 10, 20);
 }

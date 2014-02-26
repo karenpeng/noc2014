@@ -74,7 +74,7 @@ function Spring(b1, b2) {
     this.len = new PVector.sub(b1.loc, b2);
   }
   this.len = this.len.mag();
-  this.min = this.len * 0.5;
+  this.min = this.len * 0.4;
   this.max = this.len * 1.6;
 }
 
@@ -181,19 +181,20 @@ function Mash(number, bones, size) {
     }
 
     var anchor1 = new PVector(6, height - 160);
-    var anchor2 = new PVector((number - 1) * Math.floor(width / number) + 12,
+    var anchor2 = new PVector((Math.floor(number) - 1) * Math.floor(width /
+        number) + 12,
       height - 160);
 
     this.s.push(new Spring(this.b[0], anchor1));
-    this.s.push(new Spring(this.b[number - 4], anchor2));
+    this.s.push(new Spring(this.b[Math.floor(number) - 4], anchor2));
 
     for (var n = 0; n < number - 4; n++) {
       this.s.push(new Spring(this.b[n], this.b[n + 1]));
     }
 
     this.s.forEach(function (item) {
-      item.max *= 1.2;
-      item.min *= 0.8;
+      item.max *= 0.8;
+      item.min *= 1.2;
     });
   }
 
