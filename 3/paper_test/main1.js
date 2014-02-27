@@ -1,19 +1,23 @@
-var gravity, up, left, right;
+var gravity;
+//var up, left, right;
 var jumper;
 var threshold;
 var invisibleSpring;
 var counter;
-var mash = [];
+var mash;
+
+//pitchDetector.getAverageVolume(),
 
 function setup() {
   createGraphics(1100, 660);
   smooth();
   gravity = new PVector(0, 2);
+  /*
   up = new PVector(0, -140);
   left = new PVector(-50, 0);
   right = new PVector(50, 0);
-  mash.push(new Mash(19, 4, 50, width / 4, height / 4));
-  mash.push(new Mash(19, 4, 50, width * 3 / 4, height / 3));
+  */
+  mash = new Mash(19, 4, 50, width / 4, height / 4);
   //jumper = new Mash(width / 20);
   invisible = 30;
   invisibleSpring = [];
@@ -22,14 +26,14 @@ function setup() {
 
 function draw() {
   background(220);
-  mash.forEach(function (item) {
-    item.renew();
-    if (!mash.skeleton) {
-      item.show();
-    }
-    item.addF(gravity);
-    //item.addF(left);
-  });
+
+  mash.renew();
+  if (!mash.skeleton) {
+    mash.show();
+  }
+  mash.addF(gravity);
+  mash.addF(right);
+  mash.addF(left);
   //jumper.renew();
   /*
   mash.b.forEach(function (item) {
@@ -85,16 +89,22 @@ function draw() {
   text("press 'up' 'right' 'left' to move", 10, 20);
 }
 
+function mapping(input) {
+  var pitch = map(input, 40, 560, 3, 140);
+  pitch = constrain(pitch, 0, 140);
+  return pitch;
+}
+
 $(window).mousedown(function (event) {
   event.preventDefault();
-  mash[0].b.forEach(function (item) {
+  mash.b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
 });
 
 $(window).mouseup(function (event) {
   event.preventDefault();
-  mash[0].b.forEach(function (item) {
+  mash.b.forEach(function (item) {
     item.stopDragging();
   });
 });
@@ -102,29 +112,30 @@ $(window).mouseup(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 32) {
-    mash.forEach(function (item) {
-      item.skeleton = !item.skeleton;
-    });
+    mash.skeleton = !mash.skeleton;
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 38) {
-    mash[0].addF(up);
+    var h = mapping(pitchDetector.pitch);
+    //mash.addF(up);
+    var up = new PVector(0, -h);
+    mash.addF(up);
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 37) {
-    mash[0].addF(left);
+    mash.addF(left);
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 39) {
-    mash[0].addF(right);
+    mash.addF(right);
   }
 });
