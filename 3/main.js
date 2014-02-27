@@ -86,14 +86,14 @@ function draw() {
 
 $(window).mousedown(function (event) {
   event.preventDefault();
-  mash.b.forEach(function (item) {
+  mash[0].b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
 });
 
 $(window).mouseup(function (event) {
   event.preventDefault();
-  mash.b.forEach(function (item) {
+  mash[0].b.forEach(function (item) {
     item.stopDragging();
   });
 });
