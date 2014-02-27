@@ -1,17 +1,20 @@
-var gravity, up;
-var mash;
+var gravity, up, left, right;
 var jumper;
 var threshold;
 var invisibleSpring;
 var counter;
+var mash = [];
 
 function setup() {
   createGraphics(1100, 660);
   smooth();
   gravity = new PVector(0, 2);
   up = new PVector(0, -140);
-  mash = new Mash(19, 4, 100);
-  jumper = new Mash(width / 20);
+  left = new PVector(-50, 0);
+  right = new PVector(50, 0);
+  mash.push(new Mash(19, 4, 50, width / 4, height / 4));
+  mash.push(new Mash(19, 4, 50, width * 3 / 4, height / 3));
+  //jumper = new Mash(width / 20);
   invisible = 30;
   invisibleSpring = [];
   counter = 0;
@@ -19,14 +22,14 @@ function setup() {
 
 function draw() {
   background(220);
-
-  mash.renew();
-  if (!mash.skeleton) {
-    mash.show();
-  }
-  mash.addF(gravity);
-  jumper.renew();
-  //jumper.addF(gravity);
+  mash.forEach(function (item) {
+    item.renew();
+    if (!mash.skeleton) {
+      item.show();
+    }
+    item.addF(gravity);
+  });
+  //jumper.renew();
   /*
   mash.b.forEach(function (item) {
     jumper.b.forEach(function (key) {
@@ -41,7 +44,7 @@ function draw() {
     });
   });
 */
-
+  /*
   for (var j = 0; j < mash.b.length; j++) {
     for (var k = 0; k < jumper.b.length; k++) {
       var sub = PVector.sub(mash.b[j].loc, jumper.b[k].loc);
@@ -61,6 +64,7 @@ function draw() {
       }
     }
   }
+  */
   /*
   //for (var i = invisibleSpring.length - 1; i > -1; i--) {
   for (var i = 0; i < invisibleSpring.length; i++) {
@@ -77,7 +81,7 @@ function draw() {
   }
 */
   strokeWeight(0.2);
-  text("press 'up' to jump, press 'space' to see the skeleton", 10, 20);
+  text("press 'up' 'right' 'left' to move", 10, 20);
 }
 
 $(window).mousedown(function (event) {
@@ -85,11 +89,6 @@ $(window).mousedown(function (event) {
   mash.b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
-
-  jumper.b.forEach(function (item) {
-    item.clicked(event.pageX, event.pageY);
-  });
-
 });
 
 $(window).mouseup(function (event) {
@@ -97,23 +96,34 @@ $(window).mouseup(function (event) {
   mash.b.forEach(function (item) {
     item.stopDragging();
   });
-
-  jumper.b.forEach(function (item) {
-    item.stopDragging();
-  });
-
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 32) {
-    mash.skeleton = !mash.skeleton;
+    mash.forEach(function (item) {
+      item.skeleton = !item.skeleton;
+    });
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 38) {
-    mash.addF(up);
+    mash[0].addF(up);
+  }
+});
+
+$(window).keydown(function (event) {
+  event.preventDefault();
+  if (event.which === 37) {
+    mash[0].addF(left);
+  }
+});
+
+$(window).keydown(function (event) {
+  event.preventDefault();
+  if (event.which === 39) {
+    mash[0].addF(right);
   }
 });
