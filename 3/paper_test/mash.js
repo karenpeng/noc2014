@@ -7,6 +7,7 @@ function Ball(x, y, m) {
   this.dragging = false;
   this.mass = m;
   this.check = false;
+  //this.up = false;
 }
 Ball.prototype.update = function () {
   this.vel.add(this.acc);
@@ -114,7 +115,8 @@ function Mash(number, bones, size, x, y) {
   this.s = [];
   this.center = new PVector();
   this.n = number;
-  this.skeleton = false;
+  this.up = false;
+
   for (var j = 0; j < this.n; j++) {
     this.b.push(new Ball(x + cos(j * PI / this.n * 2) * size, y +
       sin(j * PI /
@@ -151,10 +153,22 @@ Mash.prototype.renew = function () {
   this.s.forEach(function (item) {
     item.connect();
     //if (this.skeleton) {
-    item.displayLine();
+    //item.displayLine();
     //}
     item.constrainLength();
   });
+};
+
+Mash.prototype.getCenter = function () {
+  this.b.forEach(function (item) {
+    var sumX, sumY;
+    sumX += item.loc.x;
+    sumY += item.loc.y;
+  });
+  var aveX, aveY;
+  aveX = sumX / this.b.length;
+  aveY = sumY / this.b.length;
+  this.center = new PVector(aveX, aveY);
 };
 
 Mash.prototype.addF = function (f) {

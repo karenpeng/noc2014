@@ -1,19 +1,26 @@
-var gravity, up, left, right;
+var gravity;
+//var up, left, right;
+var left, right;
 var jumper;
 var threshold;
 var invisibleSpring;
 var counter;
-var mash = [];
+var mash;
+var blocks = [];
+var wat = 0.01;
+
+//pitchDetector.getAverageVolume(),
 
 function setup() {
-  createGraphics(1100, 660);
+  createGraphics(1100, 400);
   smooth();
-  gravity = new PVector(0, 2);
+  gravity = new PVector(0, 12);
+  /*
   up = new PVector(0, -140);
   left = new PVector(-50, 0);
   right = new PVector(50, 0);
-  mash.push(new Mash(19, 4, 50, width / 4, height / 4));
-  mash.push(new Mash(19, 4, 50, width * 3 / 4, height / 3));
+  */
+  mash = new Mash(19, 4, 50, width / 4, height / 4);
   //jumper = new Mash(width / 20);
   invisible = 30;
   invisibleSpring = [];
@@ -22,13 +29,37 @@ function setup() {
 
 function draw() {
   background(220);
-  mash.forEach(function (item) {
-    item.renew();
-    if (!mash.skeleton) {
-      item.show();
+  wat += 0.00001;
+  if (wat >= 1) {
+    wat -= 0.00001;
+  }
+
+  mash.renew();
+  mash.getCenter();
+  mash.show();
+  if (!mash.up) {
+    mash.addF(gravity);
+  }
+  goUp();
+
+  //if (frameCount*frameCount % 600 === 0) {
+  //if (frameCount % interval === 0) {
+  if (Math.random() < wat) {
+    blocks.push(new Block(random(60, 200)));
+  }
+
+  for (var i = blocks.length - 1; i > -1; i--) {
+    blocks[i].die();
+    if (blocks[i].isDead) {
+      blocks.splice(i, 1);
+    } else {
+      blocks[i].move();
+      blocks[i].show();
+      blocks[i].check(mash);
     }
-    item.addF(gravity);
-  });
+  }
+  //mash.addF(right);
+  //mash.addF(left);
   //jumper.renew();
   /*
   mash.b.forEach(function (item) {
@@ -80,20 +111,58 @@ function draw() {
     }
   }
 */
-  strokeWeight(0.2);
-  text("press 'up' 'right' 'left' to move", 10, 20);
+  // strokeWeight(0.2);
+  // text("press 'up' 'right' 'left' to move", 10, 20);
+}
+
+function mapPitch(input) {
+  var pitch;
+  if (input < 10 || input > 1000) {
+    pitch = 0;
+  } else {
+    pitch = map(input, 40, 700, 0, 30);
+    pitch = constrain(pitch, 0, 30);
+  }
+  return pitch;
+}
+
+function mapVolume(input) {
+  var volume;
+  if (input < 127 || input > 140) {
+    volume = 0;
+  } else {
+    volume = map(input, 127, 140, 0, 50);
+    volume = constrain(volume, 0, 50);
+  }
+  return volume;
+}
+
+function goUp() {
+  var h = mapPitch(pitchDetector.pitch);
+  console.log(pitchDetector.pitch, h, mash.up);
+  //mash.addF(up);
+  //if (mash.center < 4) {
+  //h = 0;
+  //}
+  var up = new PVector(0, -h);
+  mash.addF(up);
+  if (h > 0) {
+    mash.up = true;
+  } else {
+    mash.up = false;
+  }
 }
 
 $(window).mousedown(function (event) {
   event.preventDefault();
-  mash[0].b.forEach(function (item) {
+  mash.b.forEach(function (item) {
     item.clicked(event.pageX, event.pageY);
   });
 });
 
 $(window).mouseup(function (event) {
   event.preventDefault();
-  mash[0].b.forEach(function (item) {
+  mash.b.forEach(function (item) {
     item.stopDragging();
   });
 });
@@ -101,29 +170,25 @@ $(window).mouseup(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 32) {
-    mash.forEach(function (item) {
-      item.skeleton = !item.skeleton;
-    });
+    mash.skeleton = !mash.skeleton;
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
-  if (event.which === 38) {
-    mash[0].addF(up);
-  }
+  if (event.which === 38) {}
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 37) {
-    mash[0].addF(left);
+    // mash.addF(left);
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 39) {
-    mash[0].addF(right);
+    //  mash.addF(right);
   }
 });
