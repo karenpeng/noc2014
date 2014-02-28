@@ -139,7 +139,7 @@ function mapVolume(input) {
 
 function goUp() {
   var h = mapPitch(pitchDetector.pitch);
-  console.log(pitchDetector.pitch, h, mash.up);
+  //console.log(pitchDetector.pitch, h, mash.up);
   //mash.addF(up);
   //if (mash.center < 4) {
   //h = 0;

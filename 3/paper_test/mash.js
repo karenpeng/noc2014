@@ -160,8 +160,8 @@ Mash.prototype.renew = function () {
 };
 
 Mash.prototype.getCenter = function () {
+  var sumX, sumY;
   this.b.forEach(function (item) {
-    var sumX, sumY;
     sumX += item.loc.x;
     sumY += item.loc.y;
   });
@@ -169,6 +169,7 @@ Mash.prototype.getCenter = function () {
   aveX = sumX / this.b.length;
   aveY = sumY / this.b.length;
   this.center = new PVector(aveX, aveY);
+  ellipse(this.center.x, this.center.y, 20, 20);
 };
 
 Mash.prototype.addF = function (f) {

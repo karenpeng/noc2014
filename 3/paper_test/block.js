@@ -19,6 +19,7 @@ Block.prototype.die = function () {
 
 Block.prototype.check = function (mash) {
   mash.b.forEach(function (item) {
+    console.log(this.loc.x);
     if (item.loc.x + item.mass >= this.loc.x && item.loc.x - item.mass + item
       .mass < this
       .loc.x + this.w) {
