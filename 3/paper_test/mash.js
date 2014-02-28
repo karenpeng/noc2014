@@ -7,21 +7,20 @@ function Ball(x, y, m) {
   this.dragging = false;
   this.mass = m;
   this.check = false;
-  //this.up = false;
 }
 Ball.prototype.update = function () {
   this.vel.add(this.acc);
   this.vel.mult(this.damping);
   this.loc.add(this.vel);
   this.acc.mult(0);
-  if (this.loc.x <= this.mass || this.loc.x >= width - this.mass) {
+  if (this.loc.x <= this.mass + hit || this.loc.x >= width - this.mass - hit) {
     this.vel.x *= -0.9;
   }
-  if (this.loc.y <= this.mass || this.loc.y >= height - this.mass) {
+  if (this.loc.y <= this.mass + hit || this.loc.y >= height - this.mass - hit) {
     this.vel.y *= -0.9;
   }
-  this.loc.x = constrain(this.loc.x, this.mass, width - this.mass);
-  this.loc.y = constrain(this.loc.y, this.mass, height - this.mass);
+  this.loc.x = constrain(this.loc.x, this.mass + hit, width - this.mass - hit);
+  this.loc.y = constrain(this.loc.y, this.mass + hit, height - this.mass - hit);
 };
 
 Ball.prototype.applyForce = function (force) {
@@ -33,7 +32,7 @@ Ball.prototype.applyForce = function (force) {
 Ball.prototype.render = function () {
   stroke(0);
   strokeWeight(1);
-  fill(175);
+  fill(100);
   if (this.dragging) {
     fill(50);
   }
@@ -116,6 +115,8 @@ function Mash(number, bones, size, x, y) {
   this.center = new PVector();
   this.n = number;
   this.up = false;
+  this.hurt = false;
+  this.counter = 0;
 
   for (var j = 0; j < this.n; j++) {
     this.b.push(new Ball(x + cos(j * PI / this.n * 2) * size, y +
@@ -143,33 +144,36 @@ Mash.prototype.link = function (interval, n) {
 };
 
 Mash.prototype.renew = function () {
+  if (this.hurt) {
+    this.counter++;
+    if (this.counter > 1) {
+      this.hurt = false;
+      this.counter = 0;
+    }
+  }
   this.b.forEach(function (item) {
     item.update();
-    //if (this.skeleton) {
     item.render();
-    //}
     item.drag(mouseX, mouseY);
   });
   this.s.forEach(function (item) {
     item.connect();
-    //if (this.skeleton) {
-    //item.displayLine();
-    //}
     item.constrainLength();
   });
 };
 
 Mash.prototype.getCenter = function () {
-  var sumX, sumY;
+  var sumX = 0;
+  var sumY = 0;
   this.b.forEach(function (item) {
     sumX += item.loc.x;
     sumY += item.loc.y;
   });
-  var aveX, aveY;
+  var aveX = 0;
+  var aveY = 0;
   aveX = sumX / this.b.length;
   aveY = sumY / this.b.length;
   this.center = new PVector(aveX, aveY);
-  ellipse(this.center.x, this.center.y, 20, 20);
 };
 
 Mash.prototype.addF = function (f) {
@@ -183,7 +187,11 @@ Mash.prototype.show = function () {
 
   strokeWeight(1);
   stroke(0);
-  fill(100);
+  if (!this.hurt) {
+    fill(180);
+  } else {
+    fill(255);
+  }
   //noFill();
   beginShape();
   //curveVertex(0, 0);

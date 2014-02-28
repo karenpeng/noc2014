@@ -1,5 +1,5 @@
 var gravity;
-//var up, left, right;
+var left, right;
 var left, right;
 var jumper;
 var threshold;
@@ -7,19 +7,18 @@ var invisibleSpring;
 var counter;
 var mash;
 var blocks = [];
+var bullets = [];
 var wat = 0.01;
-
-//pitchDetector.getAverageVolume(),
+var hit = 0;
 
 function setup() {
   createGraphics(1100, 400);
   smooth();
   gravity = new PVector(0, 12);
-  /*
-  up = new PVector(0, -140);
+
   left = new PVector(-50, 0);
   right = new PVector(50, 0);
-  */
+
   mash = new Mash(19, 4, 50, width / 4, height / 4);
   //jumper = new Mash(width / 20);
   invisible = 30;
@@ -28,19 +27,24 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(255);
   wat += 0.00001;
   if (wat >= 1) {
     wat -= 0.00001;
   }
 
   mash.renew();
-  mash.getCenter();
   mash.show();
+  mash.getCenter();
   if (!mash.up) {
     mash.addF(gravity);
   }
   goUp();
+
+  for (var j in bullets) {
+    bullets[j].update();
+    bullets[j].show();
+  }
 
   //if (frameCount*frameCount % 600 === 0) {
   //if (frameCount % interval === 0) {
@@ -111,8 +115,18 @@ function draw() {
     }
   }
 */
-  // strokeWeight(0.2);
-  // text("press 'up' 'right' 'left' to move", 10, 20);
+  strokeWeight(0.2);
+  stroke(0);
+  text("press right/left to move", 10 + hit, 20 + hit);
+
+  if (mash.hurt) {
+    hit += 0.8;
+  }
+  fill(0);
+  rect(0, 0, width, hit);
+  rect(0, height - hit, width, hit);
+  rect(0, 0, hit, height);
+  rect(width - hit, 0, hit, height);
 }
 
 function mapPitch(input) {
@@ -131,8 +145,8 @@ function mapVolume(input) {
   if (input < 127 || input > 140) {
     volume = 0;
   } else {
-    volume = map(input, 127, 140, 0, 50);
-    volume = constrain(volume, 0, 50);
+    volume = map(input, 127, 140, 0, 80);
+    volume = constrain(volume, 0, 80);
   }
   return volume;
 }
@@ -170,7 +184,10 @@ $(window).mouseup(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 32) {
-    mash.skeleton = !mash.skeleton;
+    //shoot
+    var r = mapVolume(pitchDetector.volume);
+    console.log(r);
+    bullets.push(new Bullet(mash.center.x, mash.center.y, r));
   }
 });
 
@@ -182,13 +199,13 @@ $(window).keydown(function (event) {
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 37) {
-    // mash.addF(left);
+    mash.addF(left);
   }
 });
 
 $(window).keydown(function (event) {
   event.preventDefault();
   if (event.which === 39) {
-    //  mash.addF(right);
+    mash.addF(right);
   }
 });
