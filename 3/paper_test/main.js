@@ -14,8 +14,16 @@ var blockCounter = 0;
 
 function setup() {
   createGraphics(1100, 500);
+  var windowWidth = window.innerWidth;
+  var canvasWidth = 1100;
+  var gap = (windowWidth - canvasWidth) / 2;
+  var gapToString = gap.toString();
+  var cssGap = gapToString + 'px';
+  console.log($("canvas"));
+  $("canvas").css("margin-left", cssGap);
+
   smooth();
-  gravity = new PVector(0, 12);
+  gravity = new PVector(0, 10);
 
   left = new PVector(-50, 0);
   right = new PVector(50, 0);
@@ -29,9 +37,12 @@ function setup() {
 
 function draw() {
   background(255);
-  wat += 0.00001;
-  if (wat >= 1) {
-    wat -= 0.00001;
+
+  if (hit >= height / 2) {
+    console.log("gameover");
+    textSize(30);
+    text("GAMEOVER", width / 2 - 30, height / 2 - 10);
+    noLoop();
   }
 
   mash.renew();
@@ -45,10 +56,15 @@ function draw() {
   //if (frameCount*frameCount % 600 === 0) {
   //if (frameCount % interval === 0)
 
+  wat += 0.00001;
+  if (wat >= 1) {
+    wat -= 0.00001;
+  }
+
   if (Math.random() < wat) {
     var result = getText();
     var ww = result.w;
-    var hh = random(10, 24);
+    var hh = random(14, 20);
     var tt = result.t;
     blocks.push(new Block(ww, hh, tt));
   }
@@ -116,7 +132,19 @@ function draw() {
     }
   }
 */
-
+  for (var j = bullets.length - 1; j > -1; j--) {
+    bullets[j].die();
+    if (bullets[j].isDead) {
+      bullets.splice(j, 1);
+    } else {
+      bullets[j].update();
+      bullets[j].show();
+      blocks.forEach(function (item) {
+        bullets[j].check(item);
+      });
+    }
+  }
+  /*
   for (var j in bullets) {
     bullets[j].update();
     bullets[j].show();
@@ -124,11 +152,13 @@ function draw() {
       bullets[j].check(blocks[k]);
     }
   }
+  */
 
   if (mash.hurt) {
-    hit += 0.4;
+    hit += 0.6;
   }
   fill(34);
+  noStroke();
   rect(0, 0, width, hit);
   rect(0, height - hit, width, hit);
   rect(0, 0, hit, height);

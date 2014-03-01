@@ -2,7 +2,7 @@ function Block(w, h, text) {
   this.w = w;
   this.h = h;
   this.loc = new PVector(width, random(0, height - this.h));
-  this.vel = new PVector(random(-6, -54), 0);
+  this.vel = new PVector(random(-6, -44), 0);
   //this.angle = theta;
   this.isDead = false;
   this.text = text;
@@ -43,8 +43,12 @@ Block.prototype.show = function () {
   noStroke();
   fill(30);
   textSize(this.h);
-  text(this.text, this.loc.x, this.loc.y);
-  //rect(this.loc.x, this.loc.y, this.w, this.h);
+  text(this.text, this.loc.x, this.loc.y + this.h);
+  /*
+  stroke(0);
+  noFill();
+  rect(this.loc.x, this.loc.y, this.w, this.h);
+  */
 };
 
 //////////////////////////////////////////////////////////////
@@ -54,11 +58,18 @@ function Bullet(x, y, r) {
   this.vel = new PVector(2, 0);
   this.acc = new PVector(2, 0);
   this.radius = r;
+  this.isDead = false;
 }
 
 Bullet.prototype.update = function () {
   this.loc.add(this.vel);
   this.vel.add(this.acc);
+};
+
+Bullet.prototype.die = function () {
+  if (this.loc.x - this.radius > width) {
+    this.isDead = true;
+  }
 };
 
 Bullet.prototype.check = function (block) {
