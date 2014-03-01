@@ -8,15 +8,15 @@
         padding: 0;
         background-color: #222;
       }
-      canvas{
-        left: 8%;
-      }
       span{
         display: block;
         color: white;
       }
+      canvas{
+        margin-left: 87px;
+      }
       #content{
-        margin-top:400px;
+        margin-top:500px;
       }
     </style>
     <!--<script type="text/javascript" src="pvector.js"></script>-->
@@ -43,6 +43,18 @@
     <script type="text/javascript" src ="mash.js"></script>
     <script type="text/javascript" src ="block.js"></script>
     <script type="text/javascript">
+      $(document).ready(function(){
+        var windowWidth = window.innerWidth;
+        var canvasWidth = 1100;
+        var gap = (windowWidth - canvasWidth) / 2;
+        var gapToString = gap.toString();
+        var cssGap = gapToString+'px';
+        console.log($("canvas"));
+        $("canvas").css("margin-left",cssGap);
+    });
+
+
+
       var i = 1;
       var articleObj = [];
       function getNYTimesData(){
@@ -84,7 +96,6 @@
           }
         });
       }
-
     </script>
   </head>
   <body>

@@ -13,7 +13,7 @@ var hit = 0;
 var blockCounter = 0;
 
 function setup() {
-  createGraphics(1100, 400);
+  createGraphics(1100, 500);
   smooth();
   gravity = new PVector(0, 12);
 
@@ -48,8 +48,9 @@ function draw() {
   if (Math.random() < wat) {
     var result = getText();
     var ww = result.w;
+    var hh = random(10, 24);
     var tt = result.t;
-    blocks.push(new Block(ww, tt));
+    blocks.push(new Block(ww, hh, tt));
   }
 
   for (var i = blocks.length - 1; i > -1; i--) {
@@ -177,12 +178,11 @@ function getText() {
     $("#content").empty();
     getNYTimesData();
   }
-  var topic = '"#headLine' + blockCounter + '"';
+  var topic = '#headLine' + blockCounter;
   var w, t;
   w = $(topic).width();
   t = $(topic).html();
   blockCounter++;
-  console.log(topic, w, t);
   if (blockCounter > 9) {
     blockCounter = 0;
     //$("#content").empty();

@@ -1,8 +1,8 @@
-function Block(w, text) {
+function Block(w, h, text) {
   this.w = w;
-  this.h = 20;
+  this.h = h;
   this.loc = new PVector(width, random(0, height - this.h));
-  this.vel = new PVector(random(-10, -60), 0);
+  this.vel = new PVector(random(-6, -54), 0);
   //this.angle = theta;
   this.isDead = false;
   this.text = text;
@@ -41,7 +41,8 @@ Block.prototype.check = function (mash) {
 
 Block.prototype.show = function () {
   noStroke();
-  fill(88, 23, 124);
+  fill(30);
+  textSize(this.h);
   text(this.text, this.loc.x, this.loc.y);
   //rect(this.loc.x, this.loc.y, this.w, this.h);
 };
