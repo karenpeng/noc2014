@@ -30,9 +30,8 @@ Ball.prototype.applyForce = function (force) {
 };
 
 Ball.prototype.render = function () {
-  stroke(0);
-  strokeWeight(1);
-  fill(100);
+  stroke(30);
+  fill(175);
   if (this.dragging) {
     fill(50);
   }
@@ -184,13 +183,11 @@ Mash.prototype.addF = function (f) {
 };
 
 Mash.prototype.show = function () {
-
-  strokeWeight(1);
-  stroke(0);
+  stroke(30);
   if (!this.hurt) {
-    fill(180);
+    fill(100);
   } else {
-    fill(255);
+    fill(250);
   }
   //noFill();
   beginShape();

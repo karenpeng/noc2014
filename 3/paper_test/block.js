@@ -1,10 +1,11 @@
-function Block(w) {
+function Block(w, text) {
   this.w = w;
   this.h = 20;
   this.loc = new PVector(width, random(0, height - this.h));
   this.vel = new PVector(random(-10, -60), 0);
   //this.angle = theta;
   this.isDead = false;
+  this.text = text;
 }
 
 Block.prototype.move = function () {
@@ -41,7 +42,8 @@ Block.prototype.check = function (mash) {
 Block.prototype.show = function () {
   noStroke();
   fill(88, 23, 124);
-  rect(this.loc.x, this.loc.y, this.w, this.h);
+  text(this.text, this.loc.x, this.loc.y);
+  //rect(this.loc.x, this.loc.y, this.w, this.h);
 };
 
 //////////////////////////////////////////////////////////////
@@ -58,7 +60,19 @@ Bullet.prototype.update = function () {
   this.vel.add(this.acc);
 };
 
+Bullet.prototype.check = function (block) {
+  if (this.loc.x > block.loc.x - this.radius && this.loc.x < block.loc.x +
+    block.w + this.radius) {
+    if (this.loc.y > block.loc.y - this.radius && this.loc.y < block.loc.y +
+      block.h + this.radius) {
+      block.isDead = true;
+    }
+  }
+};
+
 Bullet.prototype.show = function () {
   noFill();
+  strokeWeight(1);
+  stroke(30);
   ellipse(this.loc.x, this.loc.y, this.radius * 2, this.radius * 2);
 };
