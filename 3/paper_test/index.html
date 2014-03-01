@@ -15,6 +15,10 @@
       canvas{
         margin-left: 87px;
       }
+      #intro{
+        width: 200px;
+        margin: 500px auto 0;
+      }
       #content{
         margin-top:500px;
       }
@@ -51,6 +55,7 @@
         var cssGap = gapToString+'px';
         console.log($("canvas"));
         $("canvas").css("margin-left",cssGap);
+        $("#content").hide();
     });
 
 
@@ -99,6 +104,7 @@
     </script>
   </head>
   <body>
+    <span id="intro"> Scream to jump, Space to shoot</span>
     <div id="content"></div>
   </body>
 </html>
