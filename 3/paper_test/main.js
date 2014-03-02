@@ -29,7 +29,6 @@ function setup() {
   right = new PVector(50, 0);
 
   mash = new Mash(19, 4, 50, width / 4, height / 4);
-  //jumper = new Mash(width / 20);
   invisible = 30;
   invisibleSpring = [];
   counter = 0;
@@ -56,10 +55,11 @@ function draw() {
 
   if (Math.random() < wat) {
     var result = getText();
-    var ww = result.w;
-    var hh = random(14, 20);
+    if (!result.t) {
+      return;
+    }
     var tt = result.t;
-    blocks.push(new Block(ww, hh, tt));
+    blocks.push(new Block(tt));
   }
 
   for (var i = blocks.length - 1; i > -1; i--) {
@@ -212,17 +212,21 @@ function getText() {
     $("#content").empty();
     getNYTimesData();
   }
+  /*
   var topic = '#headLine' + blockCounter;
   var w, t;
   w = $(topic).width();
   t = $(topic).html();
+  */
+  var t = articleObj[blockCounter];
+
   blockCounter++;
   if (blockCounter > 9) {
     blockCounter = 0;
     //$("#content").empty();
   }
   return {
-    w: w,
+    //w: w,
     t: t
   };
 }

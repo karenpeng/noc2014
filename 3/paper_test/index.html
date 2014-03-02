@@ -15,10 +15,6 @@
         height:40px;
         margin: 20px auto;
       }
-      span{
-        display: inline-block;
-        color: #222;
-      }
       canvas{
         margin-top: 70px;
         z-index: 0;
@@ -29,9 +25,6 @@
         margin: 470px auto 20px auto;
         color: white;
         font-size: 14px;
-      }
-      #content{
-
       }
     </style>
     <!--<script type="text/javascript" src="pvector.js"></script>-->
@@ -60,8 +53,10 @@
     <script type="text/javascript">
 
       var i = 1;
+      //var articleObj;
       var articleObj = [];
       function getNYTimesData(){
+      //articleObj = [];
         "use strict";
         var nyTimesSearchURL = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=new+york+times&page=' +i +'1&sort=newest&api-key=';
         var myNYKey = '38ca745c014db64d4d8be1fc7dbfbc94:10:68849499';
@@ -88,13 +83,13 @@
                 articleObj.push(nyTimesArticles[i].headline
                     .main);
             }
-
+/*
             for(var j = 0; j< 10; j ++){
               $("#content").append(
                 '<span id="headLine' + j +'">' + articleObj[j] + '</span>'
               );
             }
-
+*/
             i++;
 
           }
@@ -104,7 +99,6 @@
   </head>
   <body>
     <h1>NOISE</h1>
-    <div id="content"></div>
     <span id="intro"> Scream to jump, Space to shoot, Scream and Space to shoot bigger</span>
   </body>
 </html>
