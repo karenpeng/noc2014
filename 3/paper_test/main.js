@@ -38,13 +38,6 @@ function setup() {
 function draw() {
   background(255);
 
-  if (hit >= height / 2) {
-    console.log("gameover");
-    textSize(30);
-    text("GAMEOVER", width / 2 - 30, height / 2 - 10);
-    noLoop();
-  }
-
   mash.renew();
   mash.show();
   mash.getCenter();
@@ -157,12 +150,23 @@ function draw() {
   if (mash.hurt) {
     hit += 0.6;
   }
+
   fill(34);
   noStroke();
   rect(0, 0, width, hit);
   rect(0, height - hit, width, hit);
   rect(0, 0, hit, height);
   rect(width - hit, 0, hit, height);
+
+  if (hit >= height / 2) {
+    console.log("gameover");
+    textSize(60);
+    fill(255);
+    //fill(100);
+    text("GAMEOVER", width / 2 - 160, height / 2);
+    noLoop();
+  }
+
 }
 
 function mapPitch(input) {
