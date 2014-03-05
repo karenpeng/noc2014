@@ -141,7 +141,7 @@ function draw() {
   if (hit >= height / 2) {
     textSize(60);
     fill(255);
-    text("GAMEOVER", width / 2 - 200, height / 2);
+    text("GAMEOVER", width / 2 - 180, height / 2);
     noLoop();
   }
 
