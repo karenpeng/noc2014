@@ -62,9 +62,9 @@
     for (var offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
       var correlation = 0;
 
-      for (var i = 0; i < SIZE; i++) {
-        correlation += Math.abs(((buf[i] - 128) / 128) -
-          ((buf[i + offset] - 128) / 128));
+      for (var j = 0; j < SIZE; j++) {
+        correlation += Math.abs(((buf[j] - 128) / 128) -
+          ((buf[j + offset] - 128) / 128));
       }
       correlation = 1 - (correlation / SIZE);
       if (correlation > best_correlation) {
@@ -127,8 +127,6 @@
       value += this.bufVolume[i];
     }
     this.volume = value / this.bufVolume.length;
-    //console.log(this.volume);
-    //return this.volume;
     requestAnimationFrame(this.getAverageVolume.bind(this));
   };
 

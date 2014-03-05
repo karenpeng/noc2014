@@ -1,7 +1,4 @@
-var gravity;
-var left, right;
-var left, right;
-var jumper;
+var gravity, left, right;
 var threshold;
 var invisibleSpring;
 var counter;
@@ -11,20 +8,23 @@ var bullets = [];
 var wat = 0.01;
 var hit = 0;
 var blockCounter = 0;
+var getTextCounter = 0;
+var windowWidth;
+
+function beCenter(w, selector) {
+  var gap = (windowWidth - w) / 2;
+  var gapString = gap.toString();
+  var gapCss = gapString + 'px';
+  $(selector).css("margin-left", gapCss);
+}
 
 function setup() {
-  createGraphics(1100, 500);
-  var windowWidth = window.innerWidth;
-  var canvasWidth = 1100;
-  var gap = (windowWidth - canvasWidth) / 2;
-  var gapToString = gap.toString();
-  var cssGap = gapToString + 'px';
-  console.log($("canvas"));
-  $("canvas").css("margin-left", cssGap);
+  createGraphics(1204, 620);
+  windowWidth = window.innerWidth;
+  beCenter(width, "canvas");
 
   smooth();
-  gravity = new PVector(0, 10);
-
+  gravity = new PVector(0, 6);
   left = new PVector(-50, 0);
   right = new PVector(50, 0);
 
@@ -45,9 +45,6 @@ function draw() {
   }
   goUp();
 
-  //if (frameCount*frameCount % 600 === 0) {
-  //if (frameCount % interval === 0)
-
   wat += 0.00001;
   if (wat >= 1) {
     wat -= 0.00001;
@@ -55,11 +52,9 @@ function draw() {
 
   if (Math.random() < wat) {
     var result = getText();
-    if (!result.t) {
-      return;
+    if (result.t) {
+      blocks.push(new Block(result.t));
     }
-    var tt = result.t;
-    blocks.push(new Block(tt));
   }
 
   for (var i = blocks.length - 1; i > -1; i--) {
@@ -137,33 +132,16 @@ function draw() {
       });
     }
   }
-  /*
-  for (var j in bullets) {
-    bullets[j].update();
-    bullets[j].show();
-    for (var k in blocks) {
-      bullets[j].check(blocks[k]);
-    }
-  }
-  */
 
   if (mash.hurt) {
     hit += 0.6;
   }
-
-  fill(34);
-  noStroke();
-  rect(0, 0, width, hit);
-  rect(0, height - hit, width, hit);
-  rect(0, 0, hit, height);
-  rect(width - hit, 0, hit, height);
+  drawBoundary();
 
   if (hit >= height / 2) {
-    console.log("gameover");
     textSize(60);
     fill(255);
-    //fill(100);
-    text("GAMEOVER", width / 2 - 160, height / 2);
+    text("GAMEOVER", width / 2 - 200, height / 2);
     noLoop();
   }
 
@@ -193,11 +171,6 @@ function mapVolume(input) {
 
 function goUp() {
   var h = mapPitch(pitchDetector.pitch);
-  //console.log(pitchDetector.pitch, h, mash.up);
-  //mash.addF(up);
-  //if (mash.center < 4) {
-  //h = 0;
-  //}
   var up = new PVector(0, -h);
   mash.addF(up);
   if (h > 0) {
@@ -209,41 +182,30 @@ function goUp() {
 
 function getText() {
   if (blockCounter === 0) {
-    $("#content").empty();
     getNYTimesData();
   }
-  /*
-  var topic = '#headLine' + blockCounter;
-  var w, t;
-  w = $(topic).width();
-  t = $(topic).html();
-  */
   var t = articleObj[blockCounter];
-
+  //if (t) {
   blockCounter++;
+  //}
   if (blockCounter > 9) {
     blockCounter = 0;
-    //$("#content").empty();
   }
   return {
-    //w: w,
     t: t
   };
 }
 
-$(window).mousedown(function (event) {
-  event.preventDefault();
-  mash.b.forEach(function (item) {
-    item.clicked(event.pageX, event.pageY);
-  });
-});
+function drawBoundary() {
+  fill(34);
+  noStroke();
+  rect(0, 0, width, hit);
+  rect(0, height - hit, width, hit);
+  rect(0, 0, hit, height);
+  rect(width - hit, 0, hit, height);
+}
 
-$(window).mouseup(function (event) {
-  event.preventDefault();
-  mash.b.forEach(function (item) {
-    item.stopDragging();
-  });
-});
+/////////////////////////////////////////////////////////////////
 
 $(window).keydown(function (event) {
   event.preventDefault();
@@ -253,11 +215,6 @@ $(window).keydown(function (event) {
       bullets.push(new Bullet(mash.center.x, mash.center.y, r));
     }
   }
-});
-
-$(window).keyup(function (event) {
-  event.preventDefault();
-  shootCounter = 0;
 });
 
 $(window).keydown(function (event) {

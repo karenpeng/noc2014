@@ -1,13 +1,9 @@
 function Block(text) {
-  //this.w = w;
   this.h = random(12, 27);
   this.loc = new PVector(width, random(0, height - this.h));
   this.vel = new PVector(random(-6, -44), 0);
-  //this.angle = theta;
   this.isDead = false;
   this.text = text;
-  textSize(this.h);
-  this.w = textWidth(this.text);
 }
 
 Block.prototype.move = function () {
@@ -34,11 +30,6 @@ Block.prototype.check = function (mash) {
       }
     }
   });
-  /*
-  for (var i in mash.b) {
-    if (mash.b[i].hasOwnProperty("loc")) console.log(i);
-  }
-*/
 };
 
 Block.prototype.show = function () {
@@ -46,12 +37,12 @@ Block.prototype.show = function () {
   fill(30);
   textSize(this.h);
   text(this.text, this.loc.x, this.loc.y + this.h);
+  this.w = textWidth(this.text);
 
-  /*
-  stroke(0);
-  noFill();
-  rect(this.loc.x, this.loc.y, this.w, this.h);
-  */
+  // stroke(0);
+  // noFill();
+  // rect(this.loc.x, this.loc.y, this.w, this.h);
+
 };
 
 //////////////////////////////////////////////////////////////

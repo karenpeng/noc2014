@@ -38,26 +38,6 @@ Ball.prototype.render = function () {
   ellipse(this.loc.x, this.loc.y, this.mass * 2, this.mass * 2);
 };
 
-Ball.prototype.clicked = function (x, y) {
-  var dis = dist(x, y, this.loc.x, this.loc.y);
-  if (dis < this.mass * 1.5) {
-    this.dragging = true;
-    this.dragOffset.x = this.loc.x - x;
-    this.dragOffset.y = this.loc.y - y;
-  }
-};
-
-Ball.prototype.stopDragging = function () {
-  this.dragging = false;
-};
-
-Ball.prototype.drag = function (x, y) {
-  if (this.dragging) {
-    this.loc.x = x + this.dragOffset.x;
-    this.loc.y = y + this.dragOffset.y;
-  }
-};
-
 ///////////////////////////////////////////////////////////////
 
 function Spring(b1, b2) {
@@ -153,7 +133,6 @@ Mash.prototype.renew = function () {
   this.b.forEach(function (item) {
     item.update();
     item.render();
-    item.drag(mouseX, mouseY);
   });
   this.s.forEach(function (item) {
     item.connect();
