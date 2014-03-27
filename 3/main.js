@@ -24,9 +24,9 @@ function draw() {
   background(220);
   mash.forEach(function (item) {
     item.renew();
-    if (!mash.skeleton) {
-      item.show();
-    }
+    // if (!mash.skeleton) {
+    //   item.show();
+    // }
     item.addF(gravity);
     //item.addF(left);
   });
