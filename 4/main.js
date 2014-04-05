@@ -18,21 +18,7 @@ var again = false;
 var counter;
 var ok;
 
-if (!init) {
-  $(".button").html("Play!");
-}
-
-$(".button").click(function () {
-  countDown();
-  if (lost) {
-    again = true;
-    reStart();
-  }
-});
-
-$(".button").hover(function () {
-  $(this).addClass("clickAble");
-});
+init = true;
 
 function setup() {
   createGraphics(1200, 700);
@@ -43,24 +29,6 @@ function setup() {
   gravity = new PVector(0, 1.5);
   snowFriction = new PVector(0, -1.1);
   ok = 0;
-}
-
-function countDown() {
-  $(".button").addClass("unClickAble");
-  $(".button").html(3);
-  setTimeout(
-    function () {
-      $(".button").html(2);
-    }, 1000);
-  setTimeout(
-    function () {
-      $(".button").html(1);
-    }, 2000);
-  setTimeout(
-    function () {
-      init = true;
-      $(".button").hide();
-    }, 3000);
 }
 
 function reStart() {
@@ -80,12 +48,6 @@ function reStart() {
 }
 
 function draw() {
-  if (lost && ok < 1) {
-    $(".button").removeClass("unClickAble");
-    $(".button").html("Try Again");
-    $(".button").show();
-    ok++;
-  }
 
   background(0);
   if (init) {
@@ -107,7 +69,7 @@ function draw() {
     lost = true;
   }
 
-  if (!bird.fly) {
+  if (!bird.fly && frameCount > 30) {
     bird.addForce(gravity);
   }
   bird.rotate();
@@ -155,19 +117,6 @@ function draw() {
     }
     bird.check(tubes[j]);
     tubes[j].view();
-    if (!tubes[j].pass) {
-      if (bird.countScore >= 50) {
-        tubes[j].sick = true;
-      }
-      if (bird.countScore >= 56) {
-        tubes[j].scale = 60;
-        tubes[j].increment = 0.1;
-      }
-      if (bird.countScore >= 62) {
-        tubes[j].scale = 80;
-        tubes[j].increment = 0.2;
-      }
-    }
   }
 
   for (var i = 0; i < winds.length; i++) {
@@ -197,10 +146,37 @@ function draw() {
   fill(255);
   textSize(30);
   text(bird.countScore, 20, 40);
+
+  var nextTubeIs = nextTube(tubes);
+  console.log(nextTubeIs);
+  bird.flap(nextTubeIs.top, nextTubeIs.bottom);
+
 }
 
+/*
+  ok now it's the algorithm
+
+*/
+
+function nextTube(tubes) {
+  //tubes.forEach(function (t) {
+  for (var i = 0; i < tubes.length; i++) {
+    var t = tubes[i];
+    if (!t.pass) {
+      var nextTInfo = {
+        top: t.h,
+        bottom: t.h + t.gap
+      };
+      //console.log(nextTInfo);
+      return nextTInfo;
+    }
+    //});
+  }
+}
+
+/*
 $(window).keydown(function (event) {
-  if (init && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+  if (init && !bird.hitGround && !bird.hitTube ) {
     if (event.which === 38) {
       bird.fly = true;
       var fly = new PVector(0, -18);
@@ -223,7 +199,7 @@ $(window).keyup(function (event) {
 });
 
 $(window).mousedown(function () {
-  if (init && !bird.hitGround && !bird.hitTube /*&& bird.loc.y < height*/ ) {
+  if (init && !bird.hitGround && !bird.hitTube  ) {
     bird.fly = true;
     var fly = new PVector(0, -18);
     bird.addForce(fly);
@@ -235,6 +211,7 @@ $(window).mousedown(function () {
 $(window).mouseup(function () {
   bird.fly = false;
 });
+*/
 
 /*
 var onPointerDown = function (evt) {

@@ -129,11 +129,25 @@ Bird.prototype.check = function (t) {
   }
 };
 
+Bird.prototype.flap = function (a, b) {
+  //console.log(this.loc.y, b);
+  if (!this.hitTube && !this.hitGround && this.loc.y > b - 100) {
+    this.fly = true;
+    var fly = new PVector(0, -18);
+    this.addForce(fly);
+    console.log("oh yeah!");
+    //wing.pause();
+    wing.play();
+    this.fly = false;
+  }
+  //if(this.vel.y === 0)
+};
+
 function Tube() {
   this.sick = false;
   //this.sick = true;
   this.w = 66;
-  this.h = round(random(100, 340));
+  this.h = round(random(90, 330));
   this.or = 200;
   this.gap = 260;
   this.loc = new PVector(width + this.w, 0);
