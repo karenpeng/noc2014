@@ -147,7 +147,7 @@ function Tube() {
   this.sick = false;
   //this.sick = true;
   this.w = 66;
-  this.h = round(random(90, 330));
+  this.h = round(random(100, 320));
   this.or = 200;
   this.gap = 260;
   this.loc = new PVector(width + this.w, 0);
